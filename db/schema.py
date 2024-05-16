@@ -1,11 +1,11 @@
-DB_name = 'giga_base.db'
+DB_NAME = 'Giga.db'
 
 CREATE_SCRIPT = '''
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS gas_levels (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    gassensor TEXT,
-    gasvalue REAL,
+    name TEXT,
+    value REAL,
     dttm TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS  connection(
@@ -15,26 +15,27 @@ CREATE TABLE IF NOT EXISTS  connection(
 );
 CREATE TABLE IF NOT EXISTS pressures (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    pressensor TEXT,
-    presvalue REAL,
+    name TEXT,
+    value REAL,
     dttm TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS tank_levels (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tank INTEGER,
-    tankvalue INTEGER,
+    name INTEGER,
+    value INTEGER,
     dttm TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS pumpwork (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    pump TEXT,
-    work INTEGER,
+    name TEXT,
+    value INTEGER,
     dttm TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS bypasses(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    bypass TEXT,
-    passvalue INTEGER
+    name TEXT,
+    value INTEGER,
+    dttm TIMESTAMP
 );
 COMMIT;    
 '''

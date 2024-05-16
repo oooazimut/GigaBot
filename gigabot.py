@@ -16,13 +16,15 @@ async def main():
     bot = Bot(config.TOKEN)
     scheduler = AsyncIOScheduler()
     scheduler.start()
-    scheduler.add_job(jobs.polling, 'interval', seconds=5, id='polling')
+    scheduler.add_job(jobs.save_data, 'interval', seconds=5, id='savedata')
+    scheduler.add_job(jobs.save_pumpwork, 'cron', hour=9, id='savepumpwork')
     storage = RedisStorage(Redis(), key_builder=DefaultKeyBuilder(with_destiny=True, with_bot_id=True))
     dp = Dispatcher(storage=storage)
     dp.update.outer_middleware(middlewares.DataMiddleware({'scheduler': scheduler}))
     setup_dialogs(dp, media_id_storage=MediaIdStorage())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
+
 
 if __name__ == '__main__':
     asyncio.run(main())

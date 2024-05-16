@@ -1,12 +1,7 @@
-from pymodbus.client import ModbusTcpClient
+from config import pumps_ids
+from service.functions import convert_to_bin
 
-client = ModbusTcpClient(
-    host='kitvideovpn.ru',
-    port=8454
-)
-
-client.connect()
-print(client.connected)
-responce = client.read_holding_registers(16406, 5)
-print(responce.registers)
-client.close()
+a = convert_to_bin(16, 5)
+b = dict(zip(pumps_ids, a))
+print(b)
+print(a, type(a))
