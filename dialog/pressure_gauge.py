@@ -9,7 +9,7 @@ pressure_dialog = Dialog(
     Window(
         Const("Манометры"),
         Button(Const("Текущие значения"), id='press_val', state=),
-        Button(Const("Архив")),
+        Button(Const("Архив"),
         state=Press_sensSG.main
     ),
     Window(
