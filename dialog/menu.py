@@ -6,16 +6,16 @@ from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from handlers import menu_handler
-from states import MenuSG
+from states import MenuSG, G_sensSG, Press_sensSG, UzaSG, Avail_SG, Engine_operatingSG
 
 main_dialog = Dialog(
     Window(
         Const("Главное меню"),
-        Button(Const("Газоанадлизаторы"), id='gaz_sensor', on_click= menu_handler.gaz_sensor),
-        Button(Const("Манометры"), id='pressure_gauge', on_click= menu_handler.pressure_sensor),
-        Button(Const("УЗА"), id='uza', on_click=menu_handler.uza),
-        Button(Const('Доступность приборов'), id='availability', on_click= menu_handler.availability),
-        Button(Const("Наработка моторов"), id='operating_time', on_click= menu_handler.engine_operating),
+        Start(Const("Газоанадлизаторы"), G_sensSG.main),
+        Start(Const("Манометры"), Press_sensSG.main),
+        Start(Const("УЗА"), UzaSG.main),
+        Start(Const('Доступность приборов'), Avail_SG.main),
+        Start(Const("Наработка моторов"), Engine_operatingSG.main),
         state=MenuSG.main
     ),
 )
