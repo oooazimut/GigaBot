@@ -1,8 +1,9 @@
+from pymodbus import ModbusException, ExceptionResponse
 from pymodbus.client import AsyncModbusTcpClient, ModbusBaseClient
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 
-from config import net_data
+from config import net_data, _logger
 
 
 class ModbusService:
@@ -20,3 +21,24 @@ class ModbusService:
         decoder = BinaryPayloadDecoder.fromRegisters(registers, byteorder=Endian.BIG, wordorder=Endian.LITTLE)
         result = decoder.decode_32bit_float()
         return result
+
+    @classmethod
+    async def polling(cls, address, count):
+        await cls.client.connect()
+        assert cls.client.connected, 'Нет соединения с ПР-103'
+        try:
+            data = await cls.client.read_holding_registers(address, count)
+        except ModbusException as exc:
+            _logger.error(f'1 {exc}')
+            cls.client.close()
+            return
+        if data.isError():
+            _logger.error(data)
+            cls.client.close()
+            return
+        if isinstance(data, ExceptionResponse):
+            _logger.error(f' 2 {data}')
+            cls.client.close()
+            return
+        cls.client.close()
+        return data.registers
