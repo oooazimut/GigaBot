@@ -6,7 +6,10 @@ class MenuSG(StatesGroup):
 class G_sensSG(StatesGroup):
     main = State(),
     prob_sens = State(),
-    archive = State()
+    pump_sens = State(),
+    archive = State(),
+    current = State(),
+    p_val_sens = State()
 class Press_sensSG(StatesGroup):
     main = State(),
 class UzaSG(StatesGroup):

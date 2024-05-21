@@ -11,7 +11,7 @@ from states import MenuSG, G_sensSG, Press_sensSG, UzaSG, Avail_SG, Engine_opera
 main_dialog = Dialog(
     Window(
         Const("Главное меню"),
-        Start(Const("Газоанадлизаторы"), G_sensSG.main),
+        Start(Const("Газоанализаторы"), G_sensSG.main),
         Start(Const("Манометры"), Press_sensSG.main),
         Start(Const("УЗА"), UzaSG.main),
         Start(Const('Доступность приборов'), Avail_SG.main),

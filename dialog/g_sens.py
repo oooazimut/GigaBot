@@ -9,25 +9,38 @@ from states import G_sensSG
 g_sens_menu = Dialog(
     Window(
         Const("Газоанализаторы"),
-        Button(Const("Пробная"), id='g_sens_pr', on_click=),
-        Button(Const("Насосная"), id='g_sens_ns', on_click=),
+        Button(Const("Пробная"), on_click=Start(state=G_sensSG.prob_sens,id="prob_bt")),
+        Button(Const("Насосная"), on_click=Start(state=G_sensSG.pump_sens, id="pump_id")),
         state=G_sensSG.main
     ),
-),
-
-g_sens_prob = Dialog(
     Window(
         Const("Пробная"),
-        Button(Const("Текущие значения"), id='g_val_prob', on_click=),
-        Button(Const("Архив"), id='achive', on_click=),
-        state=G_sensSG.main
+        Button(Const("Текущие значения"), on_click=Start( state= G_sensSG.current, id="cur_bt")),
+        Button(Const("Архив"), id='achive', on_click= Start(state= G_sensSG.archive, id="arch_bt")),
+        state=G_sensSG.prob_sens
     ),
     Window(
         Const("Текущее значение:"),
-        state=G_sensSG.prob_sens
+
+        state=G_sensSG.current
+    ),
+    Window(
+        Const("Архив"),
+
+        state=G_sensSG.archive
+    ),
+    Window(
+        Const("Насосная"),
+        Button(Const("Текущее значение"), on_click=Start(state= , id='p_val_sens')),
+        Button(Const("Архив"),on_click=Start(state=G_sensSG.archive, id='')),
+        state=G_sensSG.pump_sens
+    ),
+    Window(
+        Const("Текущее значение"),
+        state=G_sensSG.p_val_sens
     ),
     Window(
         Const("Архив"),
         state=G_sensSG.archive
     )
-),
+)
