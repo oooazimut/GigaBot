@@ -26,25 +26,32 @@ g_sens_menu = Dialog(
     Window(
         Const("Текущее значение:"),
 
+        Back(Const("Назад")),
         state=GasSensorsSG.current
     ),
     Window(
         Const("Архив"),
 
+        Back(Const("Назад")),
         state=GasSensorsSG.archive
     ),
     Window(
         Const("Насосная"),
-        Button(Const("Текущее значение"), on_click=Start(state=GasSensorsSG.p_val_sens , id='p_val_sens')),
-        Button(Const("Архив"),on_click=Start(state=GasSensorsSG.archive, id='p_archive')),
+        SwitchTo(Const("Текущее значение"), state=GasSensorsSG.p_val_sens , id='p_val_sens'),
+        SwitchTo(Const("Архив"), state=GasSensorsSG.archive, id='p_archive'),
+        Back(Const("Назад")),
         state=GasSensorsSG.pump_sens
     ),
     Window(
         Const("Текущее значение:"),
+
+        Back(Const("Назад")),
         state=GasSensorsSG.prob_sens
     ),
     Window(
         Const("Архив"),
+
+        Back(Const("Назад")),
         state=GasSensorsSG.archive
     )
 )
