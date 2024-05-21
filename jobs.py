@@ -1,37 +1,13 @@
 import datetime
 
-from pymodbus import ModbusException, ExceptionResponse
-
+from config import _logger, gas_rooms, pumps_ids
 from db.repo import Service
 from service.functions import chunks, convert_to_bin
 from service.modbus import ModbusService
 
-from config import _logger, gas_rooms, pumps_ids
-
-
-async def polling(address, count):
-    await ModbusService.client.connect()
-    assert ModbusService.client.connected, 'Нет соединения с ПР-103'
-    try:
-        data = await ModbusService.client.read_holding_registers(address, count)
-    except ModbusException as exc:
-        _logger.error(f'1 {exc}')
-        ModbusService.client.close()
-        return
-    if data.isError():
-        _logger.error(data)
-        ModbusService.client.close()
-        return
-    if isinstance(data, ExceptionResponse):
-        _logger.error(f' 2 {data}')
-        ModbusService.client.close()
-        return
-    ModbusService.client.close()
-    return data.registers
-
 
 async def save_data():
-    data = await polling(16384, 31)
+    data = await ModbusService.polling(16384, 31)
     if data:
         dttm = datetime.datetime.now().replace(microsecond=0)
 
