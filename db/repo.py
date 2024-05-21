@@ -9,3 +9,18 @@ class Service:
     def save_to_table(table: str, params: list):
         query = f'INSERT INTO {table} (name, value, dttm) VALUES (?, ?, ?)'
         db.post_query(query, params=params)
+
+
+class PressureService(Service):
+    @staticmethod
+    def get_last_values():
+        query = 'SELECT * from (SELECT * FROM pressures ORDER BY id DESC LIMIT 5) ORDER BY name'
+        result = db.select_query(query)
+
+        # current_date = datetime.datetime.now()
+        # delta: datetime.timedelta = current_date - result[0]['dttm']
+        # if delta.seconds > 300:
+        #     print(delta.seconds)
+        #     return
+
+        return result

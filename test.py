@@ -1,7 +1,9 @@
-from config import pumps_ids
-from service.functions import convert_to_bin
+from config import PUMPS_IDS, PUMPS_DESCS
+from db.repo import PressureService
 
-a = convert_to_bin(16, 5)
-b = dict(zip(pumps_ids, a))
-print(b)
-print(a, type(a))
+data = PressureService.get_last_values()
+print(type(data))
+[print(i) for i in data]
+
+pumps = list(zip(PUMPS_IDS, PUMPS_DESCS))
+print(pumps)

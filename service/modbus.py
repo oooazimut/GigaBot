@@ -3,11 +3,11 @@ from pymodbus.client import AsyncModbusTcpClient, ModbusBaseClient
 from pymodbus.constants import Endian
 from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 
-from config import net_data, _logger
+from config import NET_DATA, _logger
 
 
 class ModbusService:
-    client: ModbusBaseClient = AsyncModbusTcpClient(host=net_data.remotehost, port=net_data.remoteport)
+    client: ModbusBaseClient = AsyncModbusTcpClient(host=NET_DATA.remotehost, port=NET_DATA.remoteport)
     builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
 
     @classmethod
