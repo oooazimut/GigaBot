@@ -1,21 +1,17 @@
-from aiogram import F
-from aiogram_dialog import Dialog, Window, DialogManager
-from aiogram_dialog.api.entities import MediaAttachment, MediaId
-from aiogram_dialog.widgets.kbd import Start, Cancel, Back, Button, Select, Column
-from aiogram_dialog.widgets.media import DynamicMedia
-from aiogram_dialog.widgets.text import Const, Format
+from aiogram_dialog import Dialog, Window
+from aiogram_dialog.widgets.kbd import Start
+from aiogram_dialog.widgets.text import Const
 
-from handlers import menu_handler
-from states import MenuSG, G_sensSG, Press_sensSG, UzaSG, Avail_SG, Engine_operatingSG
+from states import MenuSG, GasSensorsSG, PressuresSG, UzaSG, AvailSG, PumpWorkSG
 
 main_dialog = Dialog(
     Window(
         Const("Главное меню"),
-        Start(Const("Газоанадлизаторы"), G_sensSG.main),
-        Start(Const("Манометры"), Press_sensSG.main),
-        Start(Const("УЗА"), UzaSG.main),
-        Start(Const('Доступность приборов'), Avail_SG.main),
-        Start(Const("Наработка моторов"), Engine_operatingSG.main),
+        Start(Const("Газоанализаторы"), state=GasSensorsSG.main, id='gassensors'),
+        Start(Const("Манометры"), state=PressuresSG.main, id='manometers'),
+        Start(Const("УЗА"), state=UzaSG.main, id='uza'),
+        Start(Const('Доступность приборов'), state=AvailSG.main, id='pravailability'),
+        Start(Const("Наработка насосов"), state=PumpWorkSG.main, id='pumpwork'),
         state=MenuSG.main
     ),
 )
