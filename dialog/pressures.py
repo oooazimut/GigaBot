@@ -1,6 +1,7 @@
 from aiogram_dialog import Dialog, Window
 from aiogram_dialog.widgets.kbd import Button, SwitchTo, Select
-from aiogram_dialog.widgets.text import Const
+from aiogram_dialog.widgets.media import Media
+from aiogram_dialog.widgets.text import Const, Format
 
 from handlers.pressures import to_current_pressures, to_pressures_archive, on_pump_selected
 from states import PressuresSG
@@ -15,15 +16,22 @@ main_pressure = Dialog(
     ),
     Window(
         Const("Текущие значения"),
+        Media(),
         state=PressuresSG.current
     ),
     Window(
         Const("Выбор насоса:"),
         Select(
+            Format('{item[0]} {item[1]}'),
+            id='pumps_choice',
+            item_id_getter=lambda x: x[0],
             items='pumps',
             on_click=on_pump_selected,
         ),
         state=PressuresSG.pump_choise
     ),
-
+    Window(
+        Media(),
+        state=PressuresSG.archive
+    ),
 )

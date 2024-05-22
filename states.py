@@ -15,6 +15,7 @@ class PressuresSG(StatesGroup):
     main = State()
     current = State()
     pump_choise = State()
+    archive = State()
 
 
 class UzaSG(StatesGroup):
