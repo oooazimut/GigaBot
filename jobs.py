@@ -1,6 +1,6 @@
 import datetime
 
-from config import _logger, gas_rooms, pumps_ids
+from config import _logger, GAS_ROOMS, PUMPS_IDS
 from db.repo import Service
 from service.functions import chunks, convert_to_bin
 from service.modbus import ModbusService
@@ -12,7 +12,7 @@ async def save_data():
         dttm = datetime.datetime.now().replace(microsecond=0)
 
         temp = data[:12]
-        gas_sensors = dict(zip(gas_rooms, (temp[:8], temp[8::])))
+        gas_sensors = dict(zip(GAS_ROOMS, (temp[:8], temp[8::])))
         for key in gas_sensors:
             sensors = chunks(gas_sensors[key], 2)
             counter = 0
@@ -21,7 +21,7 @@ async def save_data():
                 value = ModbusService.convert_to_float(sensor)
                 Service.save_to_table('gas_levels', [f'{key}.{counter}', value, dttm])
 
-        pressures = dict(zip(pumps_ids, chunks(data[12:22], 2)))
+        pressures = dict(zip(PUMPS_IDS, chunks(data[12:22], 2)))
         for pump in pressures:
             value = ModbusService.convert_to_float(pressures[pump])
             Service.save_to_table('pressures', [pump, value, dttm])
@@ -36,13 +36,13 @@ async def save_data():
                     Service.save_to_table('tank_levels', [str(tank), int(tanks[tank]), dttm])
 
         if data[29]:
-            bypasses = dict(zip(pumps_ids[:-1], convert_to_bin(data[29], 4)))
+            bypasses = dict(zip(PUMPS_IDS[:-1], convert_to_bin(data[29], 4)))
             for pump in bypasses:
                 if int(bypasses[pump]):
                     Service.save_to_table('bypasses', [pump, int(bypasses[pump]), dttm])
 
         if data[30]:
-            sirens = dict(zip(pumps_ids, convert_to_bin(data[30], 5)))
+            sirens = dict(zip(PUMPS_IDS, convert_to_bin(data[30], 5)))
             for pump in sirens:
                 if int(sirens[pump]):
                     _logger.warning(f'### работает сирена насоса {pump}')
@@ -54,6 +54,6 @@ async def save_pumpwork():
         if data:
             data = data.split()
             dttm = datetime.datetime.now().replace(microsecond=0)
-            pumpworks = dict(zip(pumps_ids, data))
+            pumpworks = dict(zip(PUMPS_IDS, data))
             for pump in pumpworks:
                 Service.save_to_table('pumpwork', [pump, int(pumpworks[pump]), dttm])
