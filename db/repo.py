@@ -20,7 +20,6 @@ class PressureService(Service):
         # current_date = datetime.datetime.now()
         # delta: datetime.timedelta = current_date - result[0]['dttm']
         # if delta.seconds > 300:
-        #     print(delta.seconds)
         #     return
 
         return result

@@ -1,4 +1,5 @@
 import asyncio
+import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
@@ -7,10 +8,13 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from redis.asyncio import Redis
 
 import config
+import routers
 from dialog import menu, pressures
 import jobs
 import middlewares
 from custom.media_storage import MediaIdStorage
+
+logging.getLogger('apscheduler').setLevel(logging.WARNING)
 
 
 async def main():
@@ -22,6 +26,7 @@ async def main():
     storage = RedisStorage(Redis(), key_builder=DefaultKeyBuilder(with_destiny=True, with_bot_id=True))
     dp = Dispatcher(storage=storage)
     dp.update.outer_middleware(middlewares.DataMiddleware({'scheduler': scheduler}))
+    dp.include_router(routers.start_router)
     dp.include_router(menu.main_dialog)
     dp.include_router(pressures.main_pressure)
     setup_dialogs(dp, media_id_storage=MediaIdStorage())

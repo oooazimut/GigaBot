@@ -1,22 +1,32 @@
 import matplotlib.pyplot as plt
-import numpy as np
+import matplotlib.image as mpimg
 
-# Создаем данные для рисунка
-x = np.linspace(0, 10, 100)
-y = np.sin(x)
+# Загружаем изображение
+image_path = 'media/pumproom.png'
+img = mpimg.imread(image_path)
 
-# Создаем рисунок
+# Создаем фигуру и ось
 fig, ax = plt.subplots()
-ax.plot(x, y)
 
-# Значение переменной
-variable_value = np.pi
-text_str = f'Variable value: {variable_value:.2f}'
+# Отображаем изображение
+ax.imshow(img)
 
-# Выводим текст с аннотацией поверх рисунка
-ax.annotate(text_str, xy=(1, np.sin(1)), xytext=(3, 0.5),
-             arrowprops=dict(facecolor='black', shrink=0.05),
-             fontsize=12, bbox=dict(facecolor='yellow', alpha=0.5))
+# Отключаем оси
+ax.axis('off')
 
-# Показываем рисунок
+# Определяем текст и его позиции
+variable_value1 = 3.14
+variable_value2 = 2.718
+text1 = f'Variable 1: {variable_value1:.2f}'
+text2 = f'Variable 2: {variable_value2:.2f}'
+
+# Добавляем текст на изображение
+ax.text(10, 30, text1, fontsize=8, color='white', bbox=dict(facecolor='black', alpha=0.5))
+ax.text(10, 150, text2, fontsize=8, color='red', bbox=dict(facecolor='black', alpha=0.2, boxstyle='round'))
+
+# Сохраняем изображение с новым именем
+output_image_path = 'media/test.png'
+plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
+
+# Показываем изображение с добавленным текстом
 plt.show()
