@@ -23,3 +23,13 @@ class PressureService(Service):
         #     return
 
         return result
+
+    @staticmethod
+    def get_values_by_date(date, pump=None):
+        query = 'select * from pressures where date(dttm) = ?'
+        params = [date]
+        if pump:
+            query += ' AND name = ?'
+            params.append(pump)
+        result = db.select_query(query, params)
+        return result

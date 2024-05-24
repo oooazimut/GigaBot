@@ -28,7 +28,7 @@ async def main():
     dp.update.outer_middleware(middlewares.DataMiddleware({'scheduler': scheduler}))
     dp.include_router(routers.start_router)
     dp.include_router(menu.main_dialog)
-    dp.include_router(pressures.main_pressure)
+    dp.include_router(pressures.main)
     setup_dialogs(dp, media_id_storage=MediaIdStorage())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
