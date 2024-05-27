@@ -1,6 +1,6 @@
-from config import PUMPS_IDS
 from db.models import SqLiteDataBase
 from db.schema import DB_NAME, CREATE_SCRIPT
+from config import PUMPS_IDS
 
 db = SqLiteDataBase(DB_NAME, CREATE_SCRIPT)
 
@@ -21,9 +21,18 @@ class PressureService(Service):
         # current_date = datetime.datetime.now()
         # delta: datetime.timedelta = current_date - result[0]['dttm']
         # if delta.seconds > 300:
-        #     print(delta.seconds)
         #     return
 
+        return result
+
+    @staticmethod
+    def get_values_by_date(date, pump=None):
+        query = 'select * from pressures where date(dttm) = ?'
+        params = [date]
+        if pump:
+            query += ' AND name = ?'
+            params.append(pump)
+        result = db.select_query(query, params)
         return result
 
 
