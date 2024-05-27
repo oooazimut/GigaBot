@@ -22,9 +22,18 @@ class PressureService(Service):
         # current_date = datetime.datetime.now()
         # delta: datetime.timedelta = current_date - result[0]['dttm']
         # if delta.seconds > 300:
-        #     print(delta.seconds)
         #     return
 
+        return result
+
+    @staticmethod
+    def get_values_by_date(date, pump=None):
+        query = 'select * from pressures where date(dttm) = ?'
+        params = [date]
+        if pump:
+            query += ' AND name = ?'
+            params.append(pump)
+        result = db.select_query(query, params)
         return result
 
 
@@ -46,5 +55,6 @@ class GasSensorService(Service):
     def get_archive_values(date: datetime.date):
         query = 'SELECT * from gas_levels WHERE DATE(timestamp)=?'
         result = db.select_query(query, [date])
-
         return result
+
+

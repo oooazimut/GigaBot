@@ -18,9 +18,10 @@ class GasSensorsSG(StatesGroup):
 
 class PressuresSG(StatesGroup):
     main = State()
-    current = State()
-    pump_choise = State()
-    archive = State()
+    date_choice = State()
+    quantity_choice = State()
+    pump_choice = State()
+    plot = State()
 
 class UzaSG(StatesGroup):
     main = State()
