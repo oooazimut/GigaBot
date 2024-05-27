@@ -4,6 +4,8 @@ from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.kbd import Start, Cancel, Back, Button, Select, Column, SwitchTo
 from aiogram_dialog.widgets.media import DynamicMedia
 from aiogram_dialog.widgets.text import Const, Format
+from custom.babel_calendar import CustomCalendar
+from handlers import g_sensor
 from states import GasSensorsSG
 
 g_sens_menu = Dialog(
@@ -18,8 +20,8 @@ g_sens_menu = Dialog(
     ),
     Window(
         Const("Пробная"),
-        SwitchTo(Const("Текущие значения"), state= GasSensorsSG.current, id="cur_bt"),
-        SwitchTo(Const("Архив"), state= GasSensorsSG.archive, id="arch_bt"),
+        Button(Const("Текущие значения"), on_click=g_sensor.to_current_level, id="cur_bt"),
+        Button(Const("Архив"), on_click=, id="arch_bt"),
         Back(Const("Назад")),
         state=GasSensorsSG.prob_sens
     ),
@@ -30,7 +32,8 @@ g_sens_menu = Dialog(
         state=GasSensorsSG.current
     ),
     Window(
-        Const("Архив"),
+        Const('Выберите дату:'),
+        CustomCalendar(id='cal', on_click=handlers.on_date_clicked),
 
         Back(Const("Назад")),
         state=GasSensorsSG.archive

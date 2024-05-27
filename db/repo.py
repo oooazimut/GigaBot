@@ -1,3 +1,5 @@
+import datetime
+
 from db.models import SqLiteDataBase
 from db.schema import DB_NAME, CREATE_SCRIPT
 
@@ -22,5 +24,27 @@ class PressureService(Service):
         # if delta.seconds > 300:
         #     print(delta.seconds)
         #     return
+
+        return result
+
+
+class GasSensorService(Service):
+    @staticmethod
+    def get_last_values():
+        query = 'SELECT * from (SELECT * FROM gas_levels ORDER BY id DESC LIMIT 5) ORDER BY name'
+        result = db.select_query(query)
+
+        # current_date = datetime.datetime.now()
+        # delta: datetime.timedelta = current_date - result[0]['dttm']
+        # if delta.seconds > 300:
+        #     print(delta.seconds)
+        #     return
+
+        return result
+
+    @staticmethod
+    def get_archive_values(date: datetime.date):
+        query = 'SELECT * from gas_levels WHERE DATE(timestamp)=?'
+        result = db.select_query(query, [date])
 
         return result
