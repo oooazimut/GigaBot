@@ -5,7 +5,7 @@ import matplotlib.dates as mdates
 
 class PlotService:
     @staticmethod
-    def plot_current_pressures(values: list):
+    def plot_current_pump(values: list, out_name: str):
         image_path = 'media/pumproom.png'
         img = mpimg.imread(image_path)
 
@@ -19,7 +19,7 @@ class PlotService:
                     bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
             abscissa += 150
 
-        output_image_path = 'media/current_pressures.png'
+        output_image_path = f'media/current_{out_name}.png'
         plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
         plt.close()
 

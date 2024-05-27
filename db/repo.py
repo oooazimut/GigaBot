@@ -41,5 +41,5 @@ class PumpWorkService(Service):
     def get_current():
         with open('vars.txt', 'r') as file:
             data = file.read().split()
-        result = dict(zip(PUMPS_IDS, data))
-        return result
+        data.reverse()
+        return data
