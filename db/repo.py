@@ -1,3 +1,4 @@
+from config import PUMPS_IDS
 from db.models import SqLiteDataBase
 from db.schema import DB_NAME, CREATE_SCRIPT
 
@@ -23,4 +24,13 @@ class PressureService(Service):
         #     print(delta.seconds)
         #     return
 
+        return result
+
+
+class PumpWorkService(Service):
+    @staticmethod
+    def get_current():
+        with open('vars.txt', 'r') as file:
+            data = file.read().split()
+        result = dict(zip(PUMPS_IDS, data))
         return result
