@@ -75,15 +75,16 @@ StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
         state=GasSensorsSG.pump_sens
     ),
     Window(
-        Const("Текущее значение:"),
-
+        Const('Выберите дату:'),
+        CustomCalendar(id='cal', on_click=g_sensor.on_date_clicked),
         Back(Const("Назад")),
-        state=GasSensorsSG.prob_sens
+        state=GasSensorsSG.archive_pumps
     ),
     Window(
-        Const("Архив"),
-
-        Back(Const("Назад")),
-        state=GasSensorsSG.archive
+        Const("Все датчики на один график или по отдельности"),
+        SwitchTo(Const("Выбор датчика"), id="one_sens", state=GasSensorsSG.choice_sens),
+        SwitchTo(Const("Все в одном"), id="all_sens",state=GasSensorsSG.plot, on_click=g_sensor.on_allinone),
+        Cancel(Const("Главное меню")),
+        state=GasSensorsSG.choice_g_sens
     ),
 )
