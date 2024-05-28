@@ -26,8 +26,12 @@ async def on_date_clicked(callback: ChatEvent, widget: ManagedCalendar, manager:
         await manager.switch_to(GasSensorsSG.choice_g_sens)
     else:
         await callback.answer('Нет данных за этот день', show_alert=True)
-async def on_pump_selected(cq: CallbackQuery, widget: Any, manager: DialogManager, g_sens: str):
+async def on_sens_selected(cq: CallbackQuery, widget: Any, manager: DialogManager, g_sens: str):
     data = GasSensorService.get_archive_values(manager.dialog_data['date'], g_sens=g_sens)
     sorted_data = sort_gas_sensors(data)
-    manager.dialog_data['path'] = PlotService.plot_pressures_by_date(sorted_data)
-    await manager.switch_to(PressuresSG.plot)
+    manager.dialog_data['path'] = PlotService.plot_gas_level_date(sorted_data)
+    await manager.switch_to(GasSensorsSG.plot)
+async def on_allinone(cq: CallbackQuery, button: Button, manager: DialogManager):
+    data = GasSensorService.get_archive_values(manager.dialog_data['date'])
+    sorted_data = sort_gas_sensors(data)
+    manager.dialog_data['path'] = PlotService.plot_gas_level_date(sorted_data)

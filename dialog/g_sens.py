@@ -22,7 +22,7 @@ g_sens_menu = Dialog(
     Window(
         Const("Пробная"),
         Button(Const("Текущие значения"), on_click=g_sensor.to_current_level, id="cur_bt"),
-        Button(Const("Архив"), on_click=, id="arch_bt"),
+        Button(Const("Архив"), on_click=GasSensorsSG.archive, id="arch_bt"),
         Back(Const("Назад")),
         state=GasSensorsSG.prob_sens
     ),
@@ -41,7 +41,7 @@ g_sens_menu = Dialog(
     Window(
         Const("Все датчики на один график или по отдельности"),
         SwitchTo(Const("Выбор датчика"), id="one_sens", state=GasSensorsSG.choice_sens),
-        SwitchTo(Const("Все в одном"), id="all_sens",state=, on_click=),
+        SwitchTo(Const("Все в одном"), id="all_sens",state=GasSensorsSG.plot, on_click=g_sensor.on_allinone),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_g_sens
     ),
@@ -62,8 +62,10 @@ g_sens_menu = Dialog(
         getter=G_sens.on_sens_selected
     ),
     Window(
-        Const("Все датчики:"),
-
+StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
+        SwitchTo(Const('Назад'), id='to_main_pressure', state=GasSensorsSG.choice_g_sens),
+        Cancel(Const('Главное меню')),
+        state=GasSensorsSG.plot
     ),
     Window(
         Const("Насосная"),

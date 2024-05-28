@@ -5,6 +5,7 @@ class MenuSG(StatesGroup):
     main = State()
 
 class GasSensorsSG(StatesGroup):
+
     main = State()
     prob_sens = State()
     pump_sens = State()
@@ -13,6 +14,8 @@ class GasSensorsSG(StatesGroup):
     p_val_sens = State()
     choice_g_sens = State()
     choice_sens = State()
+    all_sens = State()
+    plot = State()
 
 
 class PressuresSG(StatesGroup):

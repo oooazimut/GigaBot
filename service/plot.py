@@ -71,3 +71,29 @@ class PlotService:
         plt.close()
 
         return output_image_path
+
+    @staticmethod
+    def plot_gas_level_date(data: dict):
+        colors = ('b', 'g', 'r', 'c', 'm')
+        color_index = 0
+        output_image_path = 'media/'
+
+        plt.clf()
+        for g_sens, values in data.items():
+            dates, g_levels = zip(*values)
+            plt.plot(dates, g_levels, label=g_sens, color=colors[color_index])
+            color_index += 1
+            output_image_path += g_sens
+
+        plt.xlabel('Время')
+        plt.ylabel('Давление')
+        date_format = mdates.DateFormatter('%H:%M')
+        plt.gca().xaxis.set_major_formatter(date_format)
+        current_date = dates[0].date()
+        plt.title(current_date)
+        plt.legend()
+        output_image_path += '.png'
+        plt.savefig(output_image_path)
+        plt.close()
+
+        return output_image_path
