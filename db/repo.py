@@ -39,7 +39,7 @@ class PressureService(Service):
 class PumpWorkService(Service):
     @staticmethod
     def get_current():
-        with open('vars.txt', 'r') as file:
+        with open('pumpwork.txt', 'r') as file:
             data = file.read().split()
         data.reverse()
         return data
