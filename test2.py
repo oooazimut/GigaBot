@@ -1,25 +1,30 @@
-import datetime
-
-from db.repo import PressureService
-from service.functions import sort_pressures_by_pumps
-from service.plot import PlotService
-from config import PUMPS_IDS
-
-data = PressureService.get_last_values()
-if data:
-    pressures = [round(i['value'], 1) for i in data]
-    p3 = pressures.pop()
-    pressures.insert(2, p3)
-    PlotService.plot_current_pressures(pressures)
+import sqlite3
 
 
+def check_database_integrity(db_path):
+    try:
+        # Подключаемся к базе данных
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
 
-date = datetime.date.today() - datetime.timedelta(days=3)
-by_date = PressureService.get_values_by_date(date )
+        # Выполняем команду PRAGMA integrity_check
+        cursor.execute("PRAGMA integrity_check;")
+        result = cursor.fetchone()
 
-# for i in by_date:
-#     print(i)
-# print(type(by_date))
+        # Проверяем результат
+        if result[0] == 'ok':
+            print(f"Database '{db_path}' is OK.")
+        else:
+            print(f"Integrity check failed for database '{db_path}': {result[0]}")
 
-sorted_data = sort_pressures_by_pumps(by_date)
-PlotService.plot_pressures_by_date(sorted_data)
+    except sqlite3.DatabaseError as e:
+        print(f"Database error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+    finally:
+        if conn:
+            conn.close()
+
+
+# Замените 'mydatabase.db' на путь к вашей базе данных
+check_database_integrity('Giga.db')

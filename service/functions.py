@@ -9,6 +9,7 @@ def chunks(array: list, chunk: int):
 def convert_to_bin(num: int, zerofill: int) -> str:
     return bin(num)[2:].zfill(zerofill)[::-1]
 
+
 def sort_pressures_by_pumps(data):
     result = dict()
     for item in data:

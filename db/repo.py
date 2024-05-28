@@ -2,6 +2,7 @@ import datetime
 
 from db.models import SqLiteDataBase
 from db.schema import DB_NAME, CREATE_SCRIPT
+from config import PUMPS_IDS
 
 db = SqLiteDataBase(DB_NAME, CREATE_SCRIPT)
 
@@ -62,3 +63,12 @@ class GasSensorService(Service):
         return result
 
 
+
+
+class PumpWorkService(Service):
+    @staticmethod
+    def get_current():
+        with open('vars.txt', 'r') as file:
+            data = file.read().split()
+        data.reverse()
+        return data
