@@ -50,3 +50,24 @@ class PlotService:
         plt.close()
 
         return output_image_path
+
+    @staticmethod
+    def plot_current_gas_level(values: list):
+        image_path = 'media/pumproom.png'
+        img = mpimg.imread(image_path)
+
+        fig, ax = plt.subplots()
+        ax.imshow(img)
+        ax.axis('off')
+        abscissa = 500
+
+        for v in values:
+            ax.text(abscissa, 330, v, fontsize=9, color='green',
+                    bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+            abscissa += 150
+
+        output_image_path = 'media/current_gas_level.png'
+        plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
+        plt.close()
+
+        return output_image_path

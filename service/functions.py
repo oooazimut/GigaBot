@@ -15,5 +15,10 @@ def sort_pressures_by_pumps(data):
         result.setdefault(item['name'], []).append((item['dttm'], item['value']))
 
     return result
+def sort_gas_sensors(data):
+    result = dict()
+    for item in data:
+        result.setdefault(item['name'], []).append((item['dttm'], item['value']))
 
+    return result
 

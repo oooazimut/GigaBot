@@ -1,13 +1,14 @@
 from aiogram import F
+from aiogram.enums import ContentType
 from aiogram_dialog import Dialog, Window, DialogManager
 from aiogram_dialog.api.entities import MediaAttachment, MediaId
 from aiogram_dialog.widgets.kbd import Start, Cancel, Back, Button, Select, Column, SwitchTo
-from aiogram_dialog.widgets.media import DynamicMedia
+from aiogram_dialog.widgets.media import DynamicMedia, StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 from custom.babel_calendar import CustomCalendar
 from handlers import g_sensor
 from states import GasSensorsSG
-
+from getters import G_sens
 g_sens_menu = Dialog(
     Window(
         Const("Газоанализаторы"),
@@ -27,16 +28,42 @@ g_sens_menu = Dialog(
     ),
     Window(
         Const("Текущее значение:"),
-
-        Back(Const("Назад")),
+        StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
+        SwitchTo(Const('Назад'), id='to_main_pressure', state=GasSensorsSG.main),
         state=GasSensorsSG.current
     ),
     Window(
         Const('Выберите дату:'),
-        CustomCalendar(id='cal', on_click=handlers.on_date_clicked),
-
+        CustomCalendar(id='cal', on_click=g_sensor.on_date_clicked),
         Back(Const("Назад")),
         state=GasSensorsSG.archive
+    ),
+    Window(
+        Const("Все датчики на один график или по отдельности"),
+        SwitchTo(Const("Выбор датчика"), id="one_sens", state=GasSensorsSG.choice_sens),
+        SwitchTo(Const("Все в одном"), id="all_sens",state=, on_click=),
+        Cancel(Const("Главное меню")),
+        state=GasSensorsSG.choice_g_sens
+    ),
+    Window(
+      Const("Выбор номера датчика:"),
+        Column(
+            Select(
+                Format('{item[0]} {item[1]}'),
+                id='sens_choice',
+                items='sensors',
+                item_id_getter=lambda x: x[0],
+                on_click=g_sensor.on_sens_selected
+            )
+        ),
+        SwitchTo(Const("Назад"),id='to_main_gas',state=GasSensorsSG.choice_g_sens),
+        Cancel(Const("Главное меню")),
+        state=GasSensorsSG.choice_sens,
+        getter=G_sens.on_sens_selected
+    ),
+    Window(
+        Const("Все датчики:"),
+
     ),
     Window(
         Const("Насосная"),
@@ -56,5 +83,5 @@ g_sens_menu = Dialog(
 
         Back(Const("Назад")),
         state=GasSensorsSG.archive
-    )
+    ),
 )

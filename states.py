@@ -4,9 +4,6 @@ from aiogram.filters.state import StatesGroup, State
 class MenuSG(StatesGroup):
     main = State()
 
-class Press_sensSG(StatesGroup):
-    main = State(),
-
 class GasSensorsSG(StatesGroup):
     main = State()
     prob_sens = State()
@@ -14,6 +11,8 @@ class GasSensorsSG(StatesGroup):
     archive = State()
     current = State()
     p_val_sens = State()
+    choice_g_sens = State()
+    choice_sens = State()
 
 
 class PressuresSG(StatesGroup):
