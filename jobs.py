@@ -51,7 +51,6 @@ async def save_data():
         vars.uzas = data[32]
         vars.permissions = data[33]
         vars.pumps = data[34]
-        print(vars.pumps, type(vars.pumps))
 
 
 async def save_pumpwork():

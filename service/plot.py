@@ -21,7 +21,8 @@ class PlotService:
                     bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
             abscissa += 150
 
-        output_image_path = f'media/current_{out_name}.png'
+        plt.title(out_name, fontsize=16)
+        output_image_path = f'media/{out_name}.png'
         plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
         plt.close()
 
@@ -65,14 +66,14 @@ class PlotService:
 
         plt.clf()
         axes = plt.gca()
-
         ordinata = 7
+
         for title, values in data.items():
             abcissa = 1
             plt.text(abcissa, ordinata+1.5, title, fontsize=12)
-            for value in values:
-                color = get_color(value[1])
-                add_rect((abcissa, ordinata), color, axes, value[0])
+            for pump, condition in values:
+                color = get_color(condition)
+                add_rect((abcissa, ordinata), color, axes, pump)
                 abcissa += 1.5
             ordinata -= 3
 
@@ -80,5 +81,11 @@ class PlotService:
         axes.set_ylim(0, 10)
         axes.set_xlim(0, 10)
         axes.axis('off')
-        plt.title('УЗА и насосы')
-        plt.show()
+        plt.title('УЗА и насосы', fontsize=16)
+
+        image_path = 'media/uzas.png'
+        plt.savefig(image_path)
+        plt.close()
+
+        return image_path
+

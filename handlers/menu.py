@@ -7,13 +7,13 @@ from config import PUMPS_IDS
 from db.repo import PumpWorkService
 from service.functions import convert_to_bin
 from service.plot import PlotService
-from states import PumpWorkSG
+from states import PumpWorkSG, UzaSG
 
 
 async def on_pumpwork(cq: CallbackQuery, button: Button, manager: DialogManager):
     data = PumpWorkService.get_current()
     data = [round(int(val) / 3600, 1) for val in data]
-    plot_path = PlotService.plot_current_pump(data, 'pumpworks')
+    plot_path = PlotService.plot_current_pump(data, 'Наработка (часы)')
     await manager.start(state=PumpWorkSG.main, data={'path': plot_path})
 
 
@@ -29,4 +29,6 @@ async def on_uza(cq: CallbackQuery, button: Button, manager: DialogManager):
         'Разрешения': permissions,
         'Насосы': pumps
     }
-    PlotService.plot_uza(data)
+    plot_path = PlotService.plot_uza(data)
+    await manager.start(UzaSG.main, data={'path': plot_path})
+
