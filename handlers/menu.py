@@ -22,8 +22,11 @@ async def on_uza(cq: CallbackQuery, button: Button, manager: DialogManager):
     uzas = list(enumerate(uzas, start=1))
     permissions = map(int, convert_to_bin(vars.permissions, zerofill=4))
     permissions = list(zip(PUMPS_IDS, permissions))
+    permissions.reverse()
+    permissions[0] = ('Н-2.*', permissions[0][1])
     pumps = map(int, convert_to_bin(vars.pumps, zerofill=5))
     pumps = list(zip(PUMPS_IDS, pumps))
+    pumps.reverse()
     data = {
         'УЗА': uzas,
         'Разрешения': permissions,
