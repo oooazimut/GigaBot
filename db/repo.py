@@ -41,7 +41,7 @@ class PressureService(Service):
 class GasSensorService(Service):
     @staticmethod
     def get_last_values():
-        query = 'SELECT * from (SELECT * FROM gas_levels ORDER BY id DESC LIMIT 5) ORDER BY name'
+        query = 'SELECT * from (SELECT * FROM gas_levels  WHERE name like "пробная%" ORDER BY dttm DESC LIMIT 5) GROUP BY name'
         result = db.select_query(query)
 
         # current_date = datetime.datetime.now()
@@ -62,6 +62,18 @@ class GasSensorService(Service):
         result = db.select_query(query, params)
         return result
 
+    @staticmethod
+    def get_pumps_last_values():
+        query = 'SELECT * from (SELECT * FROM gas_levels  WHERE name like "насосная%" ORDER BY dttm DESC LIMIT 5) GROUP BY name'
+        result = db.select_query(query)
+
+        # current_date = datetime.datetime.now()
+        # delta: datetime.timedelta = current_date - result[0]['dttm']
+        # if delta.seconds > 300:
+        #     print(delta.seconds)
+        #     return
+
+        return result
 
 
 

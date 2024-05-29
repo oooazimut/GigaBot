@@ -56,20 +56,20 @@ g_sens_menu = Dialog(
                 on_click=g_sensor.on_sens_selected
             )
         ),
-        SwitchTo(Const("Назад"),id='to_main_gas',state=GasSensorsSG.choice_g_sens),
+        SwitchTo(Const("Назад"),id='to_main_gas', state=GasSensorsSG.choice_g_sens),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_sens,
-        getter=G_sens.on_sens_selected
+        getter=G_sens.on_sens_prob_selected
     ),
     Window(
-StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
+        StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
         SwitchTo(Const('Назад'), id='to_main_pressure', state=GasSensorsSG.choice_g_sens),
         Cancel(Const('Главное меню')),
         state=GasSensorsSG.plot
     ),
     Window(
         Const("Насосная"),
-        SwitchTo(Const("Текущее значение"), state=GasSensorsSG.p_val_sens , id='p_val_sens'),
+        SwitchTo(Const("Текущее значение"), on_click=g_sensor.to_current_pump_level, id='p_val_sens'),
         SwitchTo(Const("Архив"), state=GasSensorsSG.archive, id='p_archive'),
         Back(Const("Назад")),
         state=GasSensorsSG.pump_sens
@@ -82,9 +82,26 @@ StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
     ),
     Window(
         Const("Все датчики на один график или по отдельности"),
-        SwitchTo(Const("Выбор датчика"), id="one_sens", state=GasSensorsSG.choice_sens),
+        SwitchTo(Const("Выбор датчика"), id="one_sens", state=GasSensorsSG.choice_sens_pump),
         SwitchTo(Const("Все в одном"), id="all_sens",state=GasSensorsSG.plot, on_click=g_sensor.on_allinone),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_g_sens
     ),
+    Window(
+        Const("Выбор номера датчика:"),
+        Column(
+            Select(
+                Format('{item[0]} {item[1]}'),
+                id='sens_choice',
+                items='sensors',
+                item_id_getter=lambda x: x[0],
+                on_click=g_sensor.on_sens_selected
+            )
+        ),
+        SwitchTo(Const("Назад"),id='to_main_gas',state=GasSensorsSG.choice_g_sens),
+        Cancel(Const("Главное меню")),
+        state=GasSensorsSG.choice_sens_pump,
+        getter=G_sens.on_sens_selected
+    ),
+
 )
