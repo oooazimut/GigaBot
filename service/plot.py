@@ -98,7 +98,7 @@ class PlotService:
 
     @staticmethod
     def plot_gas_level_date(data: dict):
-        colors = ('b', 'g', 'r', 'c', 'm')
+        colors = ('b', 'g', 'r', 'c', 'm', 'y')
         color_index = 0
         output_image_path = 'media/'
 
@@ -110,7 +110,7 @@ class PlotService:
             output_image_path += g_sens
 
         plt.xlabel('Время')
-        plt.ylabel('Давление')
+        plt.ylabel('Показания')
         date_format = mdates.DateFormatter('%H:%M')
         plt.gca().xaxis.set_major_formatter(date_format)
         current_date = dates[0].date()
