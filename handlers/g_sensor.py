@@ -39,7 +39,7 @@ async def on_date_clicked(callback: ChatEvent, widget: ManagedCalendar, manager:
     if data:
         date_str = clicked_date.strftime('%Y-%m-%d')
         manager.dialog_data['date'] = date_str
-        await manager.switch_to(GasSensorsSG.choice_p_gsens)
+        await manager.switch_to(GasSensorsSG.choice_g_sens)
     else:
         await callback.answer('Нет данных за этот день', show_alert=True)
 

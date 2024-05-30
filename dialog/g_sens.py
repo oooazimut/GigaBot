@@ -21,7 +21,7 @@ g_sens_menu = Dialog(
     Window(
         Const("Пробная"),
         Button(Const("Текущие значения"), on_click=g_sensor.to_current_level, id="cur_bt"),
-        Button(Const("Архив"), on_click=GasSensorsSG.archive, id="arch_bt"),
+        SwitchTo(Const("Архив"), state=GasSensorsSG.archive, id="arch_bt"),
         Back(Const("Назад")),
         state=GasSensorsSG.prob_sens
     ),
