@@ -50,7 +50,7 @@ g_sens_menu = Dialog(
             Select(
                 Format('{item[0]} {item[1]}'),
                 id='sens_choice',
-                items='sensors',
+                items='g_sens',
                 item_id_getter=lambda x: x[0],
                 on_click=g_sensor.on_sens_selected
             )
@@ -70,7 +70,7 @@ g_sens_menu = Dialog(
         Const("Насосная"),
         Button(Const("Текущее значение"), on_click=g_sensor.to_current_g_pump_level, id='p_val_sens'),
         SwitchTo(Const("Архив"), state=GasSensorsSG.archive_pumps, id='p_archive'),
-        Back(Const("Назад")),
+        SwitchTo(Const("Назад"), state=GasSensorsSG.main, id='back_bt'),
         state=GasSensorsSG.pump_sens
     ),
     Window(
@@ -92,12 +92,12 @@ g_sens_menu = Dialog(
             Select(
                 Format('{item[0]} {item[1]}'),
                 id='sens_choice',
-                items='sensors',
+                items='g_sens',
                 item_id_getter=lambda x: x[0],
                 on_click=g_sensor.on_sens_selected
             )
         ),
-        SwitchTo(Const("Назад"), id='to_main_gas', state=GasSensorsSG.choice_sens),
+        SwitchTo(Const("Назад"), id='to_main_gas', state=GasSensorsSG.choice_p_gsens),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_sens_pump,
         getter=G_sens.on_sens_selected
