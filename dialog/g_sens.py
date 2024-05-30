@@ -69,7 +69,7 @@ g_sens_menu = Dialog(
     ),
     Window(
         Const("Насосная"),
-        SwitchTo(Const("Текущее значение"), on_click=g_sensor.to_current_pump_level, id='p_val_sens'),
+        SwitchTo(Const("Текущее значение"), on_click=g_sensor.to_current_g_pump_level, id='p_val_sens'),
         SwitchTo(Const("Архив"), state=GasSensorsSG.archive, id='p_archive'),
         Back(Const("Назад")),
         state=GasSensorsSG.pump_sens

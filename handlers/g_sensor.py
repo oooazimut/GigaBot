@@ -18,13 +18,13 @@ async def to_current_level(cq: CallbackQuery, button: Button, manager: DialogMan
         await manager.switch_to(GasSensorsSG.current)
     else:
         await cq.answer('Данные устарели, прибор не на связи.', show_alert=True)
-async def to_current_pump_level(cq: CallbackQuery, button: Button, manager: DialogManager):
-    data = GasSensorService.get_pumps_last_values()
+async def to_current_g_pump_level(cq: CallbackQuery, button: Button, manager: DialogManager):
+    data = GasSensorService.get_g_pumps_last_values()
     if data:
         g_level = [round(i['value'], 1) for i in data]
         p3 = g_level.pop()
         g_level.insert(2, p3)
-        manager.dialog_data['path'] = PlotService.plot_current_pump(g_level)
+        manager.dialog_data['path'] = PlotService.plot_current_gas_level_pumps(g_level)
         await manager.switch_to(GasSensorsSG.current)
     else:
         await cq.answer('Данные устарели, прибор не на связи.', show_alert=True)

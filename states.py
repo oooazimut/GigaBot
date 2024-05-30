@@ -29,9 +29,5 @@ class UzaSG(StatesGroup):
     main = State()
 
 
-class AvailSG(StatesGroup):
-    main = State()
-
-
 class PumpWorkSG(StatesGroup):
     main = State()

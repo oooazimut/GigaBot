@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.dates as mdates
+import matplotlib.patches as patches
+from matplotlib.axes import Axes
 
 
 class PlotService:
@@ -8,15 +10,19 @@ class PlotService:
     def plot_current_pump(values: list, out_name: str):
         image_path = 'media/pumproom.png'
         img = mpimg.imread(image_path)
-        values.reverse()
+
         fig, ax = plt.subplots()
         ax.imshow(img)
         ax.axis('off')
-        ax.text(550, 280, "№5.1: "+str(values[0]), fontsize=9, color='green',bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
-        ax.text(930, 280, "№5.2: "+str(values[1]), fontsize=9, color='green', bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
-        ax.text(930, 1170, "№5.3: "+str(values[2]), fontsize=9, color='green', bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
-        ax.text(60, 530, "№5.4: "+str(values[3]), fontsize=9, color='green', bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
-        output_image_path = f'media/current_{out_name}.png'
+        abscissa = 500
+
+        for v in values:
+            ax.text(abscissa, 330, v, fontsize=9, color='green',
+                    bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+            abscissa += 150
+
+        plt.title(out_name, fontsize=16)
+        output_image_path = f'media/{out_name}.png'
         plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
         plt.close()
 
@@ -58,10 +64,32 @@ class PlotService:
         ax.axis('off')
 
         ax.text(630, 290, "№3.8: "+str(values[0]), fontsize=9, color='green',
-        bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+            bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
         ax.text(160, 700, "№4.1: "+str(values[1]), fontsize=9, color='green',
-        bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
-        output_image_path = 'media/current_gas_level.png'
+            bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+        output_image_path = 'media/current_gas_level_prob.png'
+        plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
+        plt.close()
+
+        return output_image_path
+    @staticmethod
+    def plot_current_gas_level_pumps(values: list, out_name: str):
+        image_path = 'media/pumproom.png'
+        img = mpimg.imread(image_path)
+
+        fig, ax = plt.subplots()
+        ax.imshow(img)
+        ax.axis('off')
+
+        ax.text(550, 280, "№5.1: " + str(values[0]), fontsize=9, color='green',
+                bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+        ax.text(930, 280, "№5.2: " + str(values[1]), fontsize=9, color='green',
+                bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+        ax.text(930, 1170, "№5.3: " + str(values[2]), fontsize=9, color='green',
+                bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+        ax.text(60, 530, "№5.4: " + str(values[3]), fontsize=9, color='green',
+                bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+        output_image_path = 'media/current_gas_level_pump.png'
         plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
         plt.close()
 
@@ -92,3 +120,38 @@ class PlotService:
         plt.close()
 
         return output_image_path
+    @staticmethod
+    def plot_uza(data: dict):
+        def get_color(value):
+            return 'green' if value else 'red'
+
+        def add_rect(point: tuple, sq_color: str, axs: Axes, name: str):
+            plt.text(point[0]-0.3, point[1]+0.6, name)
+            rect = patches.Circle(point, 0.25, edgecolor='black', facecolor=sq_color)
+            axs.add_patch(rect)
+
+        plt.clf()
+        axes = plt.gca()
+        ordinata = 7
+
+        for title, values in data.items():
+            abcissa = 1
+            plt.text(abcissa, ordinata+1.5, title, fontsize=12)
+            for pump, condition in values:
+                color = get_color(condition)
+                add_rect((abcissa, ordinata), color, axes, pump)
+                abcissa += 1.5
+            ordinata -= 3
+
+        axes.set_aspect('equal')
+        axes.set_ylim(0, 10)
+        axes.set_xlim(0, 10)
+        axes.axis('off')
+        plt.title('УЗА и насосы', fontsize=16)
+
+        image_path = 'media/uzas.png'
+        plt.savefig(image_path)
+        plt.close()
+
+        return image_path
+

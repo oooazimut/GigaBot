@@ -1,5 +1,6 @@
 import datetime
 
+import vars
 from config import _logger, GAS_ROOMS, PUMPS_IDS
 from db.repo import Service
 from service.functions import chunks, convert_to_bin
@@ -7,7 +8,7 @@ from service.modbus import ModbusService
 
 
 async def save_data():
-    data = await ModbusService.polling(16384, 31)
+    data = await ModbusService.polling(16384, 35)
     if data:
         dttm = datetime.datetime.now().replace(microsecond=0)
 
@@ -26,7 +27,7 @@ async def save_data():
             value = ModbusService.convert_to_float(pressures[pump])
             Service.save_to_table('pressures', [pump, value, dttm])
 
-        with open('vars.txt', 'w') as fi:
+        with open('pumpwork.txt', 'w') as fi:
             print(*data[22:27], file=fi)
 
         if data[28]:
@@ -47,9 +48,13 @@ async def save_data():
                 if int(sirens[pump]):
                     _logger.warning(f'### работает сирена насоса {pump}')
 
+        vars.uzas = data[32]
+        vars.permissions = data[33]
+        vars.pumps = data[34]
+
 
 async def save_pumpwork():
-    with open('vars.txt', 'r') as fo:
+    with open('pumpwork.txt', 'r') as fo:
         data = fo.read()
         if data:
             data = data.split()

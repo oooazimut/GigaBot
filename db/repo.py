@@ -63,7 +63,7 @@ class GasSensorService(Service):
         return result
 
     @staticmethod
-    def get_pumps_last_values():
+    def get_g_pumps_last_values():
         query = 'SELECT * from (SELECT * FROM gas_levels  WHERE name like "насосная%" ORDER BY dttm DESC LIMIT 5) GROUP BY name'
         result = db.select_query(query)
 
@@ -80,7 +80,7 @@ class GasSensorService(Service):
 class PumpWorkService(Service):
     @staticmethod
     def get_current():
-        with open('vars.txt', 'r') as file:
+        with open('pumpwork.txt', 'r') as file:
             data = file.read().split()
         data.reverse()
         return data
