@@ -1,8 +1,5 @@
-import datetime
-
 from db.models import SqLiteDataBase
 from db.schema import DB_NAME, CREATE_SCRIPT
-from config import PUMPS_IDS
 
 db = SqLiteDataBase(DB_NAME, CREATE_SCRIPT)
 
@@ -41,7 +38,8 @@ class PressureService(Service):
 class GasSensorService(Service):
     @staticmethod
     def get_last_values():
-        query = 'SELECT * from (SELECT * FROM gas_levels  WHERE name like "пробная%" ORDER BY dttm DESC LIMIT 5) GROUP BY name'
+        query = ('SELECT * from (SELECT * FROM gas_levels  WHERE name like "пробная%" ORDER BY dttm DESC LIMIT 5) '
+                 'GROUP BY name')
         result = db.select_query(query)
 
         # current_date = datetime.datetime.now()
@@ -64,7 +62,8 @@ class GasSensorService(Service):
 
     @staticmethod
     def get_g_pumps_last_values():
-        query = 'SELECT * from (SELECT * FROM gas_levels  WHERE name like "насосная%" ORDER BY dttm DESC LIMIT 5) GROUP BY name'
+        query = ('SELECT * from (SELECT * FROM gas_levels  WHERE name like "насосная%" ORDER BY dttm DESC LIMIT 5) '
+                 'GROUP BY name')
         result = db.select_query(query)
 
         # current_date = datetime.datetime.now()
@@ -74,7 +73,6 @@ class GasSensorService(Service):
         #     return
 
         return result
-
 
 
 class PumpWorkService(Service):

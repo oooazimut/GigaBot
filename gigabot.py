@@ -9,7 +9,7 @@ from redis.asyncio import Redis
 
 import config
 import routers
-from dialog import menu, pressures, pumpwork, uza
+from dialog import menu, pressures, pumpwork, uza, g_sens
 import jobs
 import middlewares
 from custom.media_storage import MediaIdStorage
@@ -28,7 +28,7 @@ async def main():
     dp.update.outer_middleware(middlewares.DataMiddleware({'scheduler': scheduler}))
     dp.include_router(routers.start_router)
     dp.include_router(menu.main_dialog)
-    dp.include_routers(pressures.main, pumpwork.main, uza.main)
+    dp.include_routers(pressures.main, pumpwork.main, uza.main, g_sens.g_sens_menu)
     setup_dialogs(dp, media_id_storage=MediaIdStorage())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)

@@ -55,7 +55,7 @@ class PlotService:
         return output_image_path
 
     @staticmethod
-    def plot_current_gas_level_prob(values: list, out_name: str):
+    def plot_current_gas_level_prob(values: list):
         image_path = 'media/testroom.png'
         img = mpimg.imread(image_path)
 
@@ -63,17 +63,18 @@ class PlotService:
         ax.imshow(img)
         ax.axis('off')
 
-        ax.text(630, 290, "№3.8: "+str(values[0]), fontsize=9, color='green',
-            bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
-        ax.text(160, 700, "№4.1: "+str(values[1]), fontsize=9, color='green',
-            bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+        ax.text(630, 290, "№3.8: " + str(values[0]), fontsize=9, color='green',
+                bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
+        ax.text(160, 700, "№4.1: " + str(values[1]), fontsize=9, color='green',
+                bbox=dict(facecolor='black', alpha=0.1, boxstyle='round'))
         output_image_path = 'media/current_gas_level_prob.png'
         plt.savefig(output_image_path, bbox_inches='tight', pad_inches=0, dpi=300)
         plt.close()
 
         return output_image_path
+
     @staticmethod
-    def plot_current_gas_level_pumps(values: list, out_name: str):
+    def plot_current_gas_level_pumps(values: list):
         image_path = 'media/pumproom.png'
         img = mpimg.imread(image_path)
 
@@ -120,13 +121,14 @@ class PlotService:
         plt.close()
 
         return output_image_path
+
     @staticmethod
     def plot_uza(data: dict):
         def get_color(value):
             return 'green' if value else 'red'
 
         def add_rect(point: tuple, sq_color: str, axs: Axes, name: str):
-            plt.text(point[0]-0.3, point[1]+0.6, name)
+            plt.text(point[0] - 0.3, point[1] + 0.6, name)
             rect = patches.Circle(point, 0.25, edgecolor='black', facecolor=sq_color)
             axs.add_patch(rect)
 
@@ -136,7 +138,7 @@ class PlotService:
 
         for title, values in data.items():
             abcissa = 1
-            plt.text(abcissa, ordinata+1.5, title, fontsize=12)
+            plt.text(abcissa, ordinata + 1.5, title, fontsize=12)
             for pump, condition in values:
                 color = get_color(condition)
                 add_rect((abcissa, ordinata), color, axes, pump)
@@ -154,4 +156,3 @@ class PlotService:
         plt.close()
 
         return image_path
-
