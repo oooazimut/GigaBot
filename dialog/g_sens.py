@@ -5,7 +5,7 @@ from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from custom.babel_calendar import CustomCalendar
-from getters import G_sens
+from getters import g_sens
 from handlers import g_sensor
 from states import GasSensorsSG
 
@@ -92,7 +92,7 @@ g_sens_menu = Dialog(
             Select(
                 Format('{item[0]} {item[1]}'),
                 id='sens_choice',
-                items='g_sens',
+                items='p_sens',
                 item_id_getter=lambda x: x[0],
                 on_click=g_sensor.on_sens_selected
             )
