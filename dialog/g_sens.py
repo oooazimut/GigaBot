@@ -58,7 +58,7 @@ g_sens_menu = Dialog(
         SwitchTo(Const("Назад"), id='to_main_gas', state=GasSensorsSG.choice_g_sens),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_sens,
-        getter=G_sens.on_sens_prob_selected
+        getter=g_sens.on_sens_prob_selected
     ),
     Window(
         StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
@@ -100,7 +100,7 @@ g_sens_menu = Dialog(
         SwitchTo(Const("Назад"), id='to_main_gas', state=GasSensorsSG.choice_p_gsens),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_sens_pump,
-        getter=G_sens.on_sens_selected
+        getter=g_sens.on_sens_selected
     ),
 
 )
