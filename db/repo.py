@@ -54,11 +54,11 @@ class GasSensorService(Service):
         return result
 
     @staticmethod
-    def get_archive_values(date, g_sens=None):
+    def get_archive_values(date, g_sens):
         query = 'select * from gas_levels where date(dttm) = ?'
         params = [date]
         if g_sens:
-            query += ' AND name = ?'
+            query += ' AND name like ?'
             params.append(g_sens)
         result = db.select_query(query, params)
         return result
@@ -76,7 +76,11 @@ class GasSensorService(Service):
         #     return
 
         return result
-
+    @staticmethod
+    def get_g_sens_warning_values():
+        query = ('SELECT * from gas_levels')
+        result = db.select_query(query)
+        return result
 
 class PumpWorkService(Service):
     @staticmethod
