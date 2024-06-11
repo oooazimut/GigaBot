@@ -51,13 +51,12 @@ async def on_sens_selected(cq: CallbackQuery, widget: Any, manager: DialogManage
     await manager.switch_to(GasSensorsSG.plot)
 
 
-async def on_allinone(manager: DialogManager):
+async def on_allinone(cq: CallbackQuery, button: Button, manager: DialogManager):
     data = GasSensorService.get_archive_values(manager.dialog_data['date'], "насосная%")
     sorted_data = sort_gas_sensors(data)
     manager.dialog_data['path'] = PlotService.plot_gas_level_date(sorted_data)
 
-
-async def on_allprob(manager: DialogManager):
+async def on_allprob(cq: CallbackQuery, button: Button, manager: DialogManager):
     data = GasSensorService.get_archive_values(manager.dialog_data['date'], "пробная%")
     sorted_data = sort_gas_sensors(data)
     manager.dialog_data['path'] = PlotService.plot_gas_level_date(sorted_data)
