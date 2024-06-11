@@ -22,7 +22,7 @@ g_sens_menu = Dialog(
         Const("Пробная"),
         Button(Const("Текущие значения"), on_click=g_sensor.to_current_level, id="cur_bt"),
         SwitchTo(Const("Архив"), state=GasSensorsSG.archive, id="arch_bt"),
-        Back(Const("Назад")),
+        SwitchTo(Const("Главное меню"), state=GasSensorsSG.main, id="bc_to_main"),
         state=GasSensorsSG.prob_sens
     ),
     Window(
@@ -34,7 +34,7 @@ g_sens_menu = Dialog(
     Window(
         Const('Выберите дату:'),
         CustomCalendar(id='cal', on_click=g_sensor.on_date_clicked),
-        Back(Const("Назад")),
+        SwitchTo(Const('Назад'), id='to_main_pressure', state=GasSensorsSG.prob_sens),
         state=GasSensorsSG.archive
     ),
     Window(
@@ -70,13 +70,13 @@ g_sens_menu = Dialog(
         Const("Насосная"),
         Button(Const("Текущее значение"), on_click=g_sensor.to_current_g_pump_level, id='p_val_sens'),
         SwitchTo(Const("Архив"), state=GasSensorsSG.archive_pumps, id='p_archive'),
-        SwitchTo(Const("Назад"), state=GasSensorsSG.main, id='back_bt'),
+        SwitchTo(Const("Главное меню"), state=GasSensorsSG.main, id='back_bt'),
         state=GasSensorsSG.pump_sens
     ),
     Window(
         Const('Выберите дату:'),
         CustomCalendar(id='cal', on_click=g_sensor.on_date_clicked),
-        Back(Const("Назад")),
+        SwitchTo(Const('Назад'), id='to_main_pressure', state=GasSensorsSG.pump_sens),
         state=GasSensorsSG.archive_pumps
     ),
     Window(
