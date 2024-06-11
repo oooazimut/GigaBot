@@ -52,7 +52,7 @@ class GasSensorService(Service):
         return result
 
     @staticmethod
-    def get_archive_values(date, g_sens):
+    def get_archive_values(date, g_sens=None):
         query = 'select * from gas_levels where date(dttm) = ?'
         params = [date]
         if g_sens:
