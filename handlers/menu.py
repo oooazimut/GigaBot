@@ -46,6 +46,7 @@ async def on_uza(cq: CallbackQuery, button: Button, manager: DialogManager):
         pressures = [str(i) for i in pressures]
         pressures.reverse()
     pumpworks = PumpWorkService.get_current()
+    pumpworks = [str(round(int(i)/3600, 1)) for i in pumpworks]
 
     ImageService.print_text(imaga, ['Давление(бар)'], [50, 1000], fontsize=40)
     ImageService.print_text(imaga, pressures, [50, 1100])
