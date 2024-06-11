@@ -15,8 +15,6 @@ async def to_current(cq: CallbackQuery, button: Button, manager: DialogManager):
     data = PressureService.get_last_values()
     if data:
         pressures = [round(i['value'], 1) for i in data]
-        p3 = pressures.pop()
-        pressures.insert(2, p3)
         pressures.reverse()
         manager.dialog_data['path'] = PlotService.plot_current_pump(pressures, 'Давление (бар)')
         await manager.switch_to(PressuresSG.plot)

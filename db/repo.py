@@ -24,6 +24,8 @@ class PressureService(Service):
         if delta.seconds > 300:
             return
 
+        el3 = result.pop()
+        result.insert(2, el3)
         return result
 
     @staticmethod
@@ -78,7 +80,7 @@ class GasSensorService(Service):
 
 class PumpWorkService(Service):
     @staticmethod
-    def get_current():
+    def get_current() -> list:
         with open('pumpwork.txt', 'r') as file:
             data = file.read().split()
         data.reverse()

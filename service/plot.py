@@ -166,13 +166,25 @@ class ImageService:
     def paste_row(bg: Image.Image, values: Iterable, group: str, ordinata: float, abcissa: float = 30, size: int = 150,
                   step: int = 200):
         path = f'media/uza/{group}/'
+        draw = ImageDraw.Draw(bg)
+        font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=28, encoding='UTF-8')
+
         for position, val in values:
             element = Image.open(path + str(val) + '.png').resize((size, size)).convert('RGBA')
             bg.paste(element, (abcissa, ordinata), element)
-            draw = ImageDraw.Draw(bg)
-            font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=28, encoding='UTF-8')
             draw.text((abcissa + 40, ordinata - 40), str(position), fill='black', font=font)
             abcissa += step
         result_path = 'media/uza/result.png'
         bg.save(result_path)
         return result_path
+
+    @staticmethod
+    def print_text(img: Image.Image, some_text: list[str], point: list[float, float], step: int = 200, fontsize=33):
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=fontsize, encoding='UTF-8')
+        for item in some_text:
+            draw.text(point, item, fill='black', font=font)
+            point[0] += step
+        img.save('media/uza/result.png')
+
+
