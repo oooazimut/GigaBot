@@ -81,7 +81,7 @@ g_sens_menu = Dialog(
     ),
     Window(
         Const("Все датчики на один график или по отдельности"),
-        SwitchTo(Const("Выбор датчика"), id="one_sens", state=GasSensorsSG.choice_sens_pump),
+        SwitchTo(Const("Выбор датчика"), id="one_sens_pump", state=GasSensorsSG.choice_sens_pump),
         SwitchTo(Const("Все в одном"), id="all_sens", state=GasSensorsSG.plot, on_click=g_sensor.on_allinone),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_p_gsens
