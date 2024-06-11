@@ -43,6 +43,15 @@ async def on_date_clicked(callback: ChatEvent, widget: ManagedCalendar, manager:
     else:
         await callback.answer('Нет данных за этот день', show_alert=True)
 
+async def on_date_click_prob(callback: ChatEvent, widget: ManagedCalendar, manager: DialogManager,
+                          clicked_date: datetime.date, /):
+    data = GasSensorService.get_archive_values(clicked_date)
+    if data:
+        date_str = clicked_date.strftime('%Y-%m-%d')
+        manager.dialog_data['date'] = date_str
+        await manager.switch_to(GasSensorsSG.choice_g_sens)
+    else:
+        await callback.answer('Нет данных за этот день', show_alert=True)
 
 async def on_sens_selected(cq: CallbackQuery, widget: Any, manager: DialogManager, g_sens: str):
     data = GasSensorService.get_archive_values(manager.dialog_data['date'], g_sens=g_sens)

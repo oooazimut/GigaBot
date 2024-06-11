@@ -33,7 +33,7 @@ g_sens_menu = Dialog(
     ),
     Window(
         Const('Выберите дату:'),
-        CustomCalendar(id='cal', on_click=g_sensor.on_date_clicked),
+        CustomCalendar(id='cal', on_click=g_sensor.on_date_click_prob),
         SwitchTo(Const('Назад'), id='to_main_pressure', state=GasSensorsSG.prob_sens),
         state=GasSensorsSG.archive
     ),
