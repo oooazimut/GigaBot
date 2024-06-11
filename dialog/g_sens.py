@@ -1,13 +1,13 @@
 from aiogram.enums import ContentType
-from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import Cancel, Back, Button, Select, Column, SwitchTo
+from aiogram_dialog import Dialog, Window, StartMode
+from aiogram_dialog.widgets.kbd import Cancel, Button, Select, Column, SwitchTo, Start
 from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from custom.babel_calendar import CustomCalendar
 from getters import g_sens
 from handlers import g_sensor
-from states import GasSensorsSG
+from states import GasSensorsSG, SensPlotSG, MenuSG
 
 g_sens_menu = Dialog(
     Window(
@@ -40,7 +40,7 @@ g_sens_menu = Dialog(
     Window(
         Const("Все датчики на один график или по отдельности"),
         SwitchTo(Const("Выбор датчика"), id="one_sens", state=GasSensorsSG.choice_sens),
-        SwitchTo(Const("Все в одном"), id="all_sens", state=GasSensorsSG.plot, on_click=g_sensor.on_allprob),
+        Button(Const("Все в одном"), id="all_sens", on_click=g_sensor.on_allprob),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_g_sens
     ),
@@ -61,12 +61,6 @@ g_sens_menu = Dialog(
         getter=g_sens.on_sens_prob_selected
     ),
     Window(
-        StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
-        SwitchTo(Const('Назад'), id='to_main_pressure', state=GasSensorsSG.choice_g_sens),
-        Cancel(Const('Главное меню')),
-        state=GasSensorsSG.plot
-    ),
-    Window(
         Const("Насосная"),
         Button(Const("Текущее значение"), on_click=g_sensor.to_current_g_pump_level, id='p_val_sens'),
         SwitchTo(Const("Архив"), state=GasSensorsSG.archive_pumps, id='p_archive'),
@@ -82,7 +76,7 @@ g_sens_menu = Dialog(
     Window(
         Const("Все датчики на один график или по отдельности"),
         SwitchTo(Const("Выбор датчика"), id="one_sens_pump", state=GasSensorsSG.choice_sens_pump),
-        SwitchTo(Const("Все в одном"), id="all_sens", state=GasSensorsSG.plot, on_click=g_sensor.on_allinone),
+        Button(Const("Все в одном"), id="all_sens", on_click=g_sensor.on_allinone),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_p_gsens
     ),
@@ -103,4 +97,13 @@ g_sens_menu = Dialog(
         getter=g_sens.on_sens_selected
     ),
 
+)
+
+plot = Dialog(
+    Window(
+        StaticMedia(path=Format('{start_data[path]}'), type=ContentType.PHOTO),
+        Cancel(Const('Назад')),
+        Start(Const('Главное меню'), id='to_main_from_plot', state=MenuSG.main, mode=StartMode.RESET_STACK),
+        state=SensPlotSG.main
+    ),
 )

@@ -6,7 +6,7 @@ from aiogram_dialog.widgets.kbd import Button, ManagedCalendar
 from db.repo import GasSensorService
 from service.functions import sort_gas_sensors
 from service.plot import PlotService
-from states import GasSensorsSG
+from states import GasSensorsSG, SensPlotSG
 
 
 async def to_current_level(cq: CallbackQuery, button: Button, manager: DialogManager):
@@ -43,8 +43,9 @@ async def on_date_clicked(callback: ChatEvent, widget: ManagedCalendar, manager:
     else:
         await callback.answer('Нет данных за этот день', show_alert=True)
 
+
 async def on_date_click_prob(callback: ChatEvent, widget: ManagedCalendar, manager: DialogManager,
-                          clicked_date: datetime.date, /):
+                             clicked_date: datetime.date, /):
     data = GasSensorService.get_archive_values(clicked_date)
     if data:
         date_str = clicked_date.strftime('%Y-%m-%d')
@@ -53,20 +54,23 @@ async def on_date_click_prob(callback: ChatEvent, widget: ManagedCalendar, manag
     else:
         await callback.answer('Нет данных за этот день', show_alert=True)
 
+
 async def on_sens_selected(cq: CallbackQuery, widget: Any, manager: DialogManager, g_sens: str):
     data = GasSensorService.get_archive_values(manager.dialog_data['date'], g_sens=g_sens)
     sorted_data = sort_gas_sensors(data)
-    manager.dialog_data['path'] = PlotService.plot_gas_level_date(sorted_data)
-    await manager.switch_to(GasSensorsSG.plot)
+    data = {'path': PlotService.plot_gas_level_date(sorted_data)}
+    await manager.start(SensPlotSG.main, data=data)
 
 
 async def on_allinone(cq: CallbackQuery, button: Button, manager: DialogManager):
     data = GasSensorService.get_archive_values(manager.dialog_data['date'], "насосная%")
     sorted_data = sort_gas_sensors(data)
-    manager.dialog_data['path'] = PlotService.plot_gas_level_date(sorted_data)
+    data = {'path': PlotService.plot_gas_level_date(sorted_data)}
+    await manager.start(SensPlotSG.main, data=data)
 
 
 async def on_allprob(cq: CallbackQuery, button: Button, manager: DialogManager):
     data = GasSensorService.get_archive_values(manager.dialog_data['date'], "пробная%")
     sorted_data = sort_gas_sensors(data)
-    manager.dialog_data['path'] = PlotService.plot_gas_level_date(sorted_data)
+    data = {'path': PlotService.plot_gas_level_date(sorted_data)}
+    await manager.start(SensPlotSG.main, data=data)

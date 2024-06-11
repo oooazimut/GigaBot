@@ -29,7 +29,7 @@ async def main():
     dp.update.outer_middleware(middlewares.DataMiddleware({'scheduler': scheduler}))
     dp.include_router(routers.start_router)
     dp.include_router(menu.main_dialog)
-    dp.include_routers(pressures.main, pumpwork.main, uza.main, g_sens.g_sens_menu)
+    dp.include_routers(pressures.main, pumpwork.main, uza.main, g_sens.g_sens_menu, g_sens.plot)
     setup_dialogs(dp, media_id_storage=MediaIdStorage())
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
