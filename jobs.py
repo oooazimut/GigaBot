@@ -8,7 +8,7 @@ from service.modbus import ModbusService
 
 
 async def save_data():
-    data = await ModbusService.polling(16384, 35)
+    data = await ModbusService.polling(16384, 41)
     if data:
         dttm = datetime.datetime.now().replace(microsecond=0)
 
@@ -51,6 +51,7 @@ async def save_data():
         vars.uzas = data[32]
         vars.permissions = data[33]
         vars.pumps = data[34]
+        vars.shifters = data[35::]
 
 
 async def save_pumpwork():

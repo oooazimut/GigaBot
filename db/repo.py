@@ -1,3 +1,5 @@
+import datetime
+
 from db.models import SqLiteDataBase
 from db.schema import DB_NAME, CREATE_SCRIPT
 
@@ -17,10 +19,10 @@ class PressureService(Service):
         query = 'SELECT * from (SELECT * FROM pressures ORDER BY id DESC LIMIT 5) ORDER BY name'
         result = db.select_query(query)
 
-        # current_date = datetime.datetime.now()
-        # delta: datetime.timedelta = current_date - result[0]['dttm']
-        # if delta.seconds > 300:
-        #     return
+        current_date = datetime.datetime.now()
+        delta: datetime.timedelta = current_date - result[0]['dttm']
+        if delta.seconds > 300:
+            return
 
         return result
 
@@ -42,11 +44,10 @@ class GasSensorService(Service):
                  'GROUP BY name')
         result = db.select_query(query)
 
-        # current_date = datetime.datetime.now()
-        # delta: datetime.timedelta = current_date - result[0]['dttm']
-        # if delta.seconds > 300:
-        #     print(delta.seconds)
-        #     return
+        current_date = datetime.datetime.now()
+        delta: datetime.timedelta = current_date - result[0]['dttm']
+        if delta.seconds > 300:
+            return
 
         return result
 

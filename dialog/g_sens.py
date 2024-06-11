@@ -5,7 +5,7 @@ from aiogram_dialog.widgets.media import StaticMedia
 from aiogram_dialog.widgets.text import Const, Format
 
 from custom.babel_calendar import CustomCalendar
-from getters import G_sens
+from getters import g_sens
 from handlers import g_sensor
 from states import GasSensorsSG
 
@@ -58,7 +58,7 @@ g_sens_menu = Dialog(
         SwitchTo(Const("Назад"), id='to_main_gas', state=GasSensorsSG.choice_g_sens),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_sens,
-        getter=G_sens.on_sens_prob_selected
+        getter=g_sens.on_sens_prob_selected
     ),
     Window(
         StaticMedia(path=Format('{dialog_data[path]}'), type=ContentType.PHOTO),
@@ -92,7 +92,7 @@ g_sens_menu = Dialog(
             Select(
                 Format('{item[0]} {item[1]}'),
                 id='sens_choice',
-                items='g_sens',
+                items='p_sens',
                 item_id_getter=lambda x: x[0],
                 on_click=g_sensor.on_sens_selected
             )
@@ -100,7 +100,7 @@ g_sens_menu = Dialog(
         SwitchTo(Const("Назад"), id='to_main_gas', state=GasSensorsSG.choice_p_gsens),
         Cancel(Const("Главное меню")),
         state=GasSensorsSG.choice_sens_pump,
-        getter=G_sens.on_sens_selected
+        getter=g_sens.on_sens_selected
     ),
 
 )

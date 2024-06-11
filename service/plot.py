@@ -1,7 +1,10 @@
+from typing import Iterable
+
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import matplotlib.dates as mdates
 import matplotlib.patches as patches
+from PIL import Image, ImageDraw, ImageFont
 from matplotlib.axes import Axes
 
 
@@ -127,7 +130,7 @@ class PlotService:
         def get_color(value):
             return 'green' if value else 'red'
 
-        def add_rect(point: tuple, sq_color: str, axs: Axes, name: str):
+        def add_rect(point: tuple[float, float], sq_color: str, axs: Axes, name: str):
             plt.text(point[0] - 0.3, point[1] + 0.6, name)
             rect = patches.Circle(point, 0.25, edgecolor='black', facecolor=sq_color)
             axs.add_patch(rect)
@@ -156,3 +159,20 @@ class PlotService:
         plt.close()
 
         return image_path
+
+
+class ImageService:
+    @staticmethod
+    def paste_row(bg: Image.Image, values: Iterable, group: str, ordinata: float, abcissa: float = 30, size: int = 150,
+                  step: int = 200):
+        path = f'media/uza/{group}/'
+        for position, val in values:
+            element = Image.open(path + str(val) + '.png').resize((size, size)).convert('RGBA')
+            bg.paste(element, (abcissa, ordinata), element)
+            draw = ImageDraw.Draw(bg)
+            font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=28, encoding='UTF-8')
+            draw.text((abcissa + 40, ordinata - 40), str(position), fill='black', font=font)
+            abcissa += step
+        result_path = 'media/uza/result.png'
+        bg.save(result_path)
+        return result_path
