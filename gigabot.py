@@ -10,7 +10,7 @@ from redis.asyncio import Redis
 
 import config
 import routers
-from dialog import menu, pressures, pumpwork, uza, g_sens
+from dialog import menu, pressures, pumpwork, uza, g_sens, authority
 import jobs
 import middlewares
 from custom.media_storage import MediaIdStorage
@@ -28,6 +28,7 @@ async def main():
     dp = Dispatcher(storage=storage)
     dp.update.outer_middleware(middlewares.DataMiddleware({'scheduler': scheduler}))
     dp.include_router(routers.start_router)
+    dp.include_router(authority.main)
     dp.include_router(menu.main_dialog)
     dp.include_routers(pressures.main, pumpwork.main, uza.main, g_sens.g_sens_menu, g_sens.plot)
     setup_dialogs(dp, media_id_storage=MediaIdStorage())
