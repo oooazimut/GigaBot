@@ -26,7 +26,6 @@ async def on_uza(cq: CallbackQuery, button: Button, manager: DialogManager):
     ImageService.paste_row(imaga, uzas, 'tongs', 100, step=150)
 
     shifters = enumerate(vars.shifters, start=1)
-    print(shifters)
     ImageService.paste_row(imaga, shifters, 'shifters', 350, step=150)
 
     permissions = list(map(int, convert_to_bin(vars.permissions, zerofill=4)))

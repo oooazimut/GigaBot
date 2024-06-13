@@ -38,3 +38,6 @@ class UzaSG(StatesGroup):
 
 class PumpWorkSG(StatesGroup):
     main = State()
+
+class VerifySG(StatesGroup):
+    main = State()

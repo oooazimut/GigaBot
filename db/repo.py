@@ -76,11 +76,13 @@ class GasSensorService(Service):
         #     return
 
         return result
+
     @staticmethod
     def get_g_sens_warning_values():
-        query = ('SELECT * from gas_levels')
+        query = 'SELECT * from gas_levels'
         result = db.select_query(query)
         return result
+
 
 class PumpWorkService(Service):
     @staticmethod
@@ -89,3 +91,16 @@ class PumpWorkService(Service):
             data = file.read().split()
         data.reverse()
         return data
+
+
+class UserService(Service):
+    @staticmethod
+    def get_user(userid):
+        query = 'SELECT * FROM users WHERE id = ?'
+        result = db.select_query(query, [userid])
+        return result
+
+    @staticmethod
+    def insert_user(userid, username):
+        query = 'INSERT INTO users (id, name) VALUES (?, ?)'
+        db.post_query(query, [userid, username])
