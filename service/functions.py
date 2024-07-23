@@ -3,8 +3,7 @@ from aiogram.exceptions import TelegramBadRequest
 
 from db.repo import UserService
 
-from .. import MyBot
-
+from mybot import MyBot
 
 def chunks(array: list, chunk: int):
     for i in range(0, len(array), chunk):

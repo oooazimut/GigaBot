@@ -7,7 +7,7 @@ from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 from aiogram_dialog import setup_dialogs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from redis.asyncio import Redis
-from . import MyBot
+from mybot import MyBot
 
 import config
 import routers

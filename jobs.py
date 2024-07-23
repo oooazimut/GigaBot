@@ -5,11 +5,9 @@ from config import GAS_ROOMS, PUMPS_IDS, _logger
 from db.repo import Service
 from service.functions import chunks, convert_to_bin, send_message
 from service.modbus import ModbusService
-from . import MyBot
 
 
 async def save_data():
-    bot = MyBot.get_instance()
     data = await ModbusService.polling(16384, 41)
     if data:
         dttm = datetime.datetime.now().replace(microsecond=0)
