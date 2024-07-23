@@ -7,6 +7,7 @@ from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 from aiogram_dialog import setup_dialogs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from redis.asyncio import Redis
+from . import MyBot
 
 import config
 import routers
@@ -19,7 +20,7 @@ logging.getLogger('apscheduler').setLevel(logging.WARNING)
 
 
 async def main():
-    bot = Bot(config.TOKEN)
+    bot: Bot = MyBot(config.TOKEN).get_instance()
     scheduler = AsyncIOScheduler()
     scheduler.start()
     scheduler.add_job(jobs.save_data, 'interval', seconds=5, id='savedata')
@@ -33,6 +34,7 @@ async def main():
     dp.include_routers(pressures.main, pumpwork.main, uza.main, g_sens.g_sens_menu, g_sens.plot)
     setup_dialogs(dp, media_id_storage=MediaIdStorage())
     await bot.delete_webhook(drop_pending_updates=True)
+    dp.startup()
     await dp.start_polling(bot)
 
 

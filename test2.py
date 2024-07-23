@@ -1,6 +1,4 @@
-from db.repo import PressureService
+import sqlite3 as sq
 
-
-data = PressureService.get_last_values()
-
-[print(i) for i in data]
+with sq.connect('Giga.db') as con:
+    con.execute('delete from tank_levels where name > 3')
