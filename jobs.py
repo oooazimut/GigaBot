@@ -37,7 +37,7 @@ async def save_data():
                     Service.save_to_table(
                         "tank_levels", [str(tank), int(tanks[tank]), dttm]
                     )
-                    if tanks[tank] != vars.levels[tank]:
+                    if tanks.get(tank) != vars.levels.get(tank):
                         await send_message(text=f"Переполнение емкости {tank}!")
             vars.levels = tanks
 
@@ -52,8 +52,10 @@ async def save_data():
             for pump in sirens:
                 if int(sirens[pump]):
                     _logger.warning(f"### работает сирена насоса {pump}")
-                    if sirens[pump] != vars.sirens[pump]:
-                        await send_message(text=f'отвал уза насоса {pump} во время работы!')
+                    if sirens.get(pump) != vars.sirens.get(pump):
+                        await send_message(
+                            text=f"отвал уза насоса {pump} во время работы!"
+                        )
             vars.sirens = sirens
 
         vars.uzas = data[32]
@@ -71,3 +73,14 @@ async def save_pumpwork():
             pumpworks = dict(zip(PUMPS_IDS, data))
             for pump in pumpworks:
                 Service.save_to_table("pumpwork", [pump, int(pumpworks[pump]), dttm])
+
+
+async def morning_mailing():
+    text = "Утренняя сводка:\n\n"
+
+    text += "Уровни:\n"
+    conditions = {"0": "норма", "1": "полная!"}
+    for tank in vars.levels:
+        text += f"Ёмкость {tank}: {conditions.get(vars.levels[tank])}\n"
+
+    await send_message(text=text)

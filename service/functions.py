@@ -33,7 +33,7 @@ def sort_gas_sensors(data):
 async def send_message(text: str, userids: list | None = None):
     bot: Bot = MyBot.get_instance()
     if not userids:
-        userids = UserService.get_all_users()
+        userids = [user.get('id') for user in UserService.get_all_users()]
 
     for user in userids:
         try:
