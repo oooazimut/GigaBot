@@ -13,7 +13,7 @@ from states import PumpWorkSG, UzaSG
 
 async def on_pumpwork(cq: CallbackQuery, button: Button, manager: DialogManager):
     data = PumpWorkService.get_current()
-    data = [round(int(val) / 3600, 1) for val in data]
+    data = [round(int(val) / 60, 1) for val in data]
     plot_path = PlotService.plot_current_pump(data, 'Наработка (часы)')
     await manager.start(state=PumpWorkSG.main, data={'path': plot_path})
 
