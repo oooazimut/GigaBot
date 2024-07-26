@@ -15,8 +15,13 @@ async def save_data():
         temp = data[:12]
         gas_sensors = dict(zip(GAS_ROOMS, (temp[:8], temp[8::])))
         for key in gas_sensors:
-            sensors = chunks(gas_sensors[key], 2)
-            counter = 0
+            values = map(ModbusService.convert_to_float, chunks(gas_sensors[key], 2))
+            match key:
+                case GAS_ROOMS[0]:
+                    sensors = zip()
+                case GAS_ROOMS[1]:
+                    pass
+
             for sensor in sensors:
                 counter += 1
                 value = ModbusService.convert_to_float(sensor)

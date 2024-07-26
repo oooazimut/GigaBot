@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from aiogram import Bot
 from aiogram.exceptions import TelegramBadRequest
 
@@ -5,7 +6,7 @@ from db.repo import UserService
 
 from mybot import MyBot
 
-def chunks(array: list, chunk: int):
+def chunks(array: list, chunk: int)-> Generator[list]:
     for i in range(0, len(array), chunk):
         yield array[i : i + chunk]
 
