@@ -1,18 +1,15 @@
-from aiogram import Bot
-from db.repo import UserService
-from mybot import MyBot
-from service.functions import convert_to_bin
+import sqlite3
 
-tanks = dict(enumerate(convert_to_bin(4, 3), start=1))
-print(tanks)
-conditions = {"0": "норма", "1": "полная!"}
-bot: Bot = MyBot.get_instance()
-text = "Утренняя сводка:\n\n"
-userids = [user.get('id') for user in UserService.get_all_users()]
-print(userids)
 
-text += "Уровни:\n"
-for tank in tanks:
-    text += f"Ёмкость {tank}: {conditions.get(tanks[tank])}\n"
+script = "update gas_levels set name = ? where name = ?"
+data = [
+    ("5.1", "насосная.1"),
+    ("5.2", "насосная.2"),
+    ("5.4", "насосная.3"),
+    ("5.3", "насосная.4"),
+    ("3.8", "пробная.1"),
+    ("4.1", "пробная.2"),
+]
 
-print(text)
+with sqlite3.connect("Giga.db") as con:
+    con.executemany(script, data)

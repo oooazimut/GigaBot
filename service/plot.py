@@ -179,7 +179,7 @@ class ImageService:
         return result_path
 
     @staticmethod
-    def print_text(img: Image.Image, some_text: list[str], point: list[float, float], step: int = 200, fontsize=33):
+    def print_text(img: Image.Image, some_text: list[str], point: list[float], step: int = 200, fontsize=33):
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=fontsize, encoding='UTF-8')
         for item in some_text:

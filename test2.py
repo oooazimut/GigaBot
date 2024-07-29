@@ -1,9 +1,5 @@
-from service.functions import chunks
-from service.modbus import ModbusService
+from service.functions import convert_to_bin
 
 
-some = zip((1, 2), chunks([1, 2, 3, 4,], 2))
-print(some, type(some))
-for i in some:
-    print(i)
-
+a = convert_to_bin(5, 3)
+print(a)

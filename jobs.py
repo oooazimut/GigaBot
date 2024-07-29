@@ -1,7 +1,8 @@
 import datetime
+import sqlite3
 
+import config
 import vars
-from config import GAS_ROOMS, PUMPS_IDS, _logger
 from db.repo import Service
 from service.functions import chunks, convert_to_bin, send_message
 from service.modbus import ModbusService
@@ -12,56 +13,57 @@ async def save_data():
     if data:
         dttm = datetime.datetime.now().replace(microsecond=0)
 
-        temp = data[:12]
-        gas_sensors = dict(zip(GAS_ROOMS, (temp[:8], temp[8::])))
-        for key in gas_sensors:
-            values = map(ModbusService.convert_to_float, chunks(gas_sensors[key], 2))
-            match key:
-                case GAS_ROOMS[0]:
-                    sensors = zip()
-                case GAS_ROOMS[1]:
-                    pass
+        # Датчики газа
+        keys = config.GAS_SENS_DESCS + config.GAS_SENS_PROB_DESCS
+        values = map(ModbusService.convert_to_float, chunks(data[:12], 2))
+        gas_sensors = list(zip(keys, values))
 
-            for sensor in sensors:
-                counter += 1
-                value = ModbusService.convert_to_float(sensor)
-                Service.save_to_table("gas_levels", [f"{key}.{counter}", value, dttm])
+        # Давление насосов
+        pressures = list(zip(config.PUMPS_IDS, map(ModbusService.convert_to_float, chunks(data[12:22], 2))))
 
-        pressures = dict(zip(PUMPS_IDS, chunks(data[12:22], 2)))
-        for pump in pressures:
-            value = ModbusService.convert_to_float(pressures[pump])
-            Service.save_to_table("pressures", [pump, value, dttm])
-
+        # Наработка насосов
         with open("pumpwork.txt", "w") as fi:
             print(*data[22:27], file=fi)
 
+        # Дренажные ёмкости
+        tanks = dict(enumerate(convert_to_bin(data[28], 3), start=1))
+        triggered_tanks = list()
         if data[28]:
-            tanks = dict(enumerate(convert_to_bin(data[28], 3), start=1))
             for tank in tanks:
-                if int(tanks[tank]):
-                    Service.save_to_table(
-                        "tank_levels", [str(tank), int(tanks[tank]), dttm]
-                    )
+                if tanks[tank]:
+                    triggered_tanks.append((tank, tanks[tank]))
                     if tanks.get(tank) != vars.levels.get(tank):
                         await send_message(text=f"Переполнение емкости {tank}!")
-            vars.levels = tanks
+        vars.levels = tanks
 
+        #  Работа насосов в обход
+        bypasses = dict(zip(config.PUMPS_IDS[:-1], convert_to_bin(data[29], 4)))
+        triggered_bypasses = list()
         if data[29]:
-            bypasses = dict(zip(PUMPS_IDS[:-1], convert_to_bin(data[29], 4)))
             for pump in bypasses:
-                if int(bypasses[pump]):
-                    Service.save_to_table("bypasses", [pump, int(bypasses[pump]), dttm])
+                if bypasses[pump]:
+                    triggered_bypasses.append((pump, bypasses[pump]))
+                    if bypasses.get(pump) != vars.cheats.get(pump):
+                        await send_message(text=f'Насос {pump} работает в обход УЗА!')
+        vars.cheats = bypasses
 
+        # Сработка сирен
         if data[30]:
-            sirens = dict(zip(PUMPS_IDS, convert_to_bin(data[30], 5)))
+            sirens = dict(zip(config.PUMPS_IDS, convert_to_bin(data[30], 5)))
             for pump in sirens:
                 if int(sirens[pump]):
-                    _logger.warning(f"### работает сирена насоса {pump}")
+                    config._logger.warning(f"### работает сирена насоса {pump}")
                     if sirens.get(pump) != vars.sirens.get(pump):
                         await send_message(
                             text=f"отвал уза насоса {pump} во время работы!"
                         )
             vars.sirens = sirens
+
+        with sqlite3.connect('Giga.db')as con:
+            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
+            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
+            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
+            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
 
         vars.uzas = data[32]
         vars.permissions = data[33]
@@ -75,7 +77,7 @@ async def save_pumpwork():
         if data:
             data = data.split()
             dttm = datetime.datetime.now().replace(microsecond=0)
-            pumpworks = dict(zip(PUMPS_IDS, data))
+            pumpworks = dict(zip(config.PUMPS_IDS, data))
             for pump in pumpworks:
                 Service.save_to_table("pumpwork", [pump, int(pumpworks[pump]), dttm])
 

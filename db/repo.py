@@ -111,6 +111,5 @@ class UserService(Service):
 
     @staticmethod
     def get_all_users():
-        query = 'SELECT * FROM users'
+        query = "SELECT * FROM users"
         return db.select_query(query)
-

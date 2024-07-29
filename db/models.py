@@ -1,14 +1,15 @@
 import sqlite3 as sq
 from abc import ABC, abstractmethod
+from typing import Any
 
 
 class DataBase(ABC):
     @abstractmethod
-    def select_query(self, query, params):
+    def select_query(self, query, params)-> list[dict]:
         pass
 
     @abstractmethod
-    def post_query(self, query, params):
+    def post_query(self, query, params)-> Any|None:
         pass
 
 
@@ -37,7 +38,7 @@ class SqLiteDataBase(DataBase):
                     result.append(item)
             return result
 
-    def post_query(self, query: str, params=None) -> None:
+    def post_query(self, query: str, params=None)-> Any|None:
         if params is None:
             params = []
         with sq.connect(self.name, detect_types=sq.PARSE_COLNAMES | sq.PARSE_DECLTYPES) as con:

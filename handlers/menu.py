@@ -21,20 +21,20 @@ async def on_pumpwork(cq: CallbackQuery, button: Button, manager: DialogManager)
 async def on_uza(cq: CallbackQuery, button: Button, manager: DialogManager):
     imaga = Image.new('RGBA', (1000, 1400), (255, 255, 255))
 
-    uzas = map(int, convert_to_bin(vars.uzas, zerofill=6))
+    uzas = convert_to_bin(vars.uzas, zerofill=6)
     uzas = enumerate(uzas, start=1)
     ImageService.paste_row(imaga, uzas, 'tongs', 100, step=150)
 
     shifters = enumerate(vars.shifters, start=1)
     ImageService.paste_row(imaga, shifters, 'shifters', 350, step=150)
 
-    permissions = list(map(int, convert_to_bin(vars.permissions, zerofill=4)))
+    permissions = convert_to_bin(vars.permissions, zerofill=4)
     permissions.append(permissions[-1])
     permissions = list(zip(PUMPS_IDS, permissions))
     permissions.reverse()
     ImageService.paste_row(imaga, permissions, 'condition', 600, abcissa=50, size=100)
 
-    pumps = map(int, convert_to_bin(vars.pumps, zerofill=5))
+    pumps = convert_to_bin(vars.pumps, zerofill=5)
     pumps = list(zip(PUMPS_IDS, pumps))
     pumps.reverse()
     img_path = ImageService.paste_row(imaga, pumps, 'pumps', 850)

@@ -11,8 +11,8 @@ def chunks(array: list, chunk: int)-> Generator[list]:
         yield array[i : i + chunk]
 
 
-def convert_to_bin(num: int, zerofill: int) -> str:
-    return bin(num)[2:].zfill(zerofill)[::-1]
+def convert_to_bin(num: int, zerofill: int) -> list[int]:
+    return list(map(int, bin(num)[2:].zfill(zerofill)[::-1]))
 
 
 def sort_pressures_by_pumps(data):
