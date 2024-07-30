@@ -1,5 +1,4 @@
 import datetime
-import sqlite3
 
 import config
 import vars
@@ -16,10 +15,22 @@ async def save_data():
         # Датчики газа
         keys = config.GAS_SENS_DESCS + config.GAS_SENS_PROB_DESCS
         values = map(ModbusService.convert_to_float, chunks(data[:12], 2))
-        gas_sensors = list(zip(keys, values))
+        gas_sensors = (
+            "gas_levels",
+            [(key, value, dttm) for key, value in zip(keys, values)],
+        )
 
         # Давление насосов
-        pressures = list(zip(config.PUMPS_IDS, map(ModbusService.convert_to_float, chunks(data[12:22], 2))))
+        pressures = (
+            "pressures",
+            [
+                (key, value, dttm)
+                for key, value in zip(
+                    config.PUMPS_IDS,
+                    map(ModbusService.convert_to_float, chunks(data[12:22], 2)),
+                )
+            ],
+        )
 
         # Наработка насосов
         with open("pumpwork.txt", "w") as fi:
@@ -31,10 +42,11 @@ async def save_data():
         if data[28]:
             for tank in tanks:
                 if tanks[tank]:
-                    triggered_tanks.append((tank, tanks[tank]))
+                    triggered_tanks.append((tank, tanks[tank], dttm))
                     if tanks.get(tank) != vars.levels.get(tank):
                         await send_message(text=f"Переполнение емкости {tank}!")
         vars.levels = tanks
+        tanks = ("tank_levels", tanks)
 
         #  Работа насосов в обход
         bypasses = dict(zip(config.PUMPS_IDS[:-1], convert_to_bin(data[29], 4)))
@@ -42,10 +54,11 @@ async def save_data():
         if data[29]:
             for pump in bypasses:
                 if bypasses[pump]:
-                    triggered_bypasses.append((pump, bypasses[pump]))
+                    triggered_bypasses.append((pump, bypasses[pump], dttm))
                     if bypasses.get(pump) != vars.cheats.get(pump):
-                        await send_message(text=f'Насос {pump} работает в обход УЗА!')
+                        await send_message(text=f"Насос {pump} работает в обход УЗА!")
         vars.cheats = bypasses
+        bypasses = ("bypasses", bypasses)
 
         # Сработка сирен
         if data[30]:
@@ -59,11 +72,9 @@ async def save_data():
                         )
             vars.sirens = sirens
 
-        with sqlite3.connect('Giga.db')as con:
-            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
-            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
-            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
-            con.executemany('INSERT INTO gas_levels (name, value, dttm) VALUES (?, ?, ?)', gas_sensors)
+        Service.save_to_tables(
+            [gas_sensors, pressures, triggered_tanks, triggered_bypasses]
+        )
 
         vars.uzas = data[32]
         vars.permissions = data[33]
@@ -86,7 +97,7 @@ async def morning_mailing():
     text = "Утренняя сводка:\n\n"
 
     text += "Уровни:\n"
-    conditions = {"0": "норма", "1": "полная!"}
+    conditions = {0: "норма", 1: "полная!"}
     for tank in vars.levels:
         text += f"Ёмкость {tank}: {conditions.get(vars.levels[tank])}\n"
 

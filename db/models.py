@@ -1,50 +1,72 @@
+from collections.abc import Callable
 import sqlite3 as sq
-from abc import ABC, abstractmethod
 from typing import Any
 
-
-class DataBase(ABC):
-    @abstractmethod
-    def select_query(self, query, params)-> list[dict]:
-        pass
-
-    @abstractmethod
-    def post_query(self, query, params)-> Any|None:
-        pass
+from config import DB_NAME
 
 
-class SqLiteDataBase(DataBase):
-    def __init__(self, name, script):
-        self.name = name
-        with sq.connect(self.name) as con:
-            con.executescript(script)
+# для нечуствительности кириллицы к регистру
+
+
+class SqLiteDataBase:
+    # def __init__(self, name, script):
+    #     self.name = name
+    #     with sq.connect(self.name) as con:
+    #         con.executescript(script)
 
     @staticmethod
     def custom_lower(some_str: str):
         return some_str.lower()
 
-    def select_query(self, query, params=None) -> list[dict]:
-        if params is None:
-            params = []
-        with sq.connect(self.name, detect_types=sq.PARSE_COLNAMES | sq.PARSE_DECLTYPES) as con:
-            # with sq.connect(self.name) as con:
-            con.create_function('my_lower', 1, self.custom_lower)
-            con.row_factory = sq.Row
-            temp = con.execute(query, params).fetchall()
-            result = []
-            if temp:
-                for i in temp:
-                    item = dict(zip(i.keys(), tuple(i)))
-                    result.append(item)
-            return result
+    # коннектор к БД
+    @staticmethod
+    def connector(func: Callable):
+        def wrapper(cls, *args, **kwargs) -> list[Any]:
+            with sq.connect(
+                DB_NAME, detect_types=sq.PARSE_COLNAMES | sq.PARSE_DECLTYPES
+            ) as con:
+                result = func(cls, con, *args, **kwargs)
+                return result
 
-    def post_query(self, query: str, params=None)-> Any|None:
+        return wrapper
+
+    # создание БД
+    @staticmethod
+    @connector
+    def create(con: sq.Connection, script):
+        con.executescript(script)
+
+    # получить из БД
+    @classmethod
+    @connector
+    def select_query(cls, con: sq.Connection, query: str, params=None) -> list[Any]:
         if params is None:
             params = []
-        with sq.connect(self.name, detect_types=sq.PARSE_COLNAMES | sq.PARSE_DECLTYPES) as con:
-            con.row_factory = sq.Row
-            data = con.execute(query, params).fetchall()
-            if data:
-                data = data[0]
-            con.commit()
+        con.create_function("my_lower", 1, cls.custom_lower)
+        con.row_factory = sq.Row
+        temp = con.execute(query, params).fetchall()
+        result = []
+        if temp:
+            for i in temp:
+                item = dict(zip(i.keys(), tuple(i)))
+                result.append(item)
+        return result
+
+    # положить в БД
+    @staticmethod
+    @connector
+    def post_query(con: sq.Connection, query: str, params=None) -> Any | None:
+        if params is None:
+            params = []
+        con.row_factory = sq.Row
+        data = con.execute(query, params).fetchall()
+        if data:
+            data = data[0]
+        con.commit()
         return data
+
+    @staticmethod
+    @connector
+    def post_many(con: sq.Connection, query: str, data: list[tuple]):
+        for item in data:
+            con.executemany(query.format(item[0]), item[1])

@@ -1,23 +1,25 @@
 import datetime
 
-from db.models import SqLiteDataBase
-from db.schema import CREATE_SCRIPT, DB_NAME
-
-db = SqLiteDataBase(DB_NAME, CREATE_SCRIPT)
+from db.models import SqLiteDataBase as SqDB
 
 
 class Service:
     @staticmethod
     def save_to_table(table: str, params: list):
         query = f"INSERT INTO {table} (name, value, dttm) VALUES (?, ?, ?)"
-        db.post_query(query, params=params)
+        SqDB.post_query(query, params=params)
+
+    @staticmethod
+    def save_to_tables(data: list):
+        query = "INSERT INTO {} (name, value, dttm) VALUES (?, ?, ?)"
+        SqDB.post_many(query, data)
 
 
 class PressureService(Service):
     @staticmethod
     def get_last_values():
         query = "SELECT * FROM (SELECT * FROM pressures ORDER BY id DESC LIMIT 5) ORDER BY name"
-        result = db.select_query(query)
+        result = SqDB.select_query(query)
 
         current_date = datetime.datetime.now()
         delta: datetime.timedelta = current_date - result[0]["dttm"]
@@ -35,7 +37,7 @@ class PressureService(Service):
         if pump:
             query += " AND name = ?"
             params.append(pump)
-        result = db.select_query(query, params)
+        result = SqDB.select_query(query, params)
         return result
 
 
@@ -46,7 +48,7 @@ class GasSensorService(Service):
             'SELECT * from (SELECT * FROM gas_levels  WHERE name like "пробная%" ORDER BY dttm DESC LIMIT 5) '
             "GROUP BY name"
         )
-        result = db.select_query(query)
+        result = SqDB.select_query(query)
 
         current_date = datetime.datetime.now()
         delta: datetime.timedelta = current_date - result[0]["dttm"]
@@ -62,7 +64,7 @@ class GasSensorService(Service):
         if g_sens:
             query += " AND name like ?"
             params.append(g_sens)
-        result = db.select_query(query, params)
+        result = SqDB.select_query(query, params)
         return result
 
     @staticmethod
@@ -71,7 +73,7 @@ class GasSensorService(Service):
             'SELECT * from (SELECT * FROM gas_levels  WHERE name like "насосная%" ORDER BY dttm DESC LIMIT 5) '
             "GROUP BY name"
         )
-        result = db.select_query(query)
+        result = SqDB.select_query(query)
 
         # current_date = datetime.datetime.now()
         # delta: datetime.timedelta = current_date - result[0]['dttm']
@@ -84,7 +86,7 @@ class GasSensorService(Service):
     @staticmethod
     def get_g_sens_warning_values():
         query = "SELECT * from gas_levels"
-        result = db.select_query(query)
+        result = SqDB.select_query(query)
         return result
 
 
@@ -101,15 +103,15 @@ class UserService(Service):
     @staticmethod
     def get_user(userid):
         query = "SELECT * FROM users WHERE id = ?"
-        result = db.select_query(query, [userid])
+        result = SqDB.select_query(query, [userid])
         return result
 
     @staticmethod
     def insert_user(userid, username):
         query = "INSERT INTO users (id, name) VALUES (?, ?)"
-        db.post_query(query, [userid, username])
+        SqDB.post_query(query, [userid, username])
 
     @staticmethod
     def get_all_users():
         query = "SELECT * FROM users"
-        return db.select_query(query)
+        return SqDB.select_query(query)

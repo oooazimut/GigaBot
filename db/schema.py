@@ -1,6 +1,4 @@
-DB_NAME = 'Giga.db'
-
-CREATE_SCRIPT = '''
+CREATE_SCRIPT = """
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY,
@@ -42,4 +40,5 @@ CREATE TABLE IF NOT EXISTS bypasses(
     dttm TIMESTAMP
 );
 COMMIT;    
-'''
+"""
+

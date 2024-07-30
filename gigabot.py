@@ -7,6 +7,8 @@ from aiogram.fsm.storage.redis import RedisStorage, DefaultKeyBuilder
 from aiogram_dialog import setup_dialogs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from redis.asyncio import Redis
+from db.models import SqLiteDataBase
+from db.schema import CREATE_SCRIPT
 from mybot import MyBot
 
 import config
@@ -20,6 +22,7 @@ logging.getLogger("apscheduler").setLevel(logging.WARNING)
 
 
 async def main():
+    SqLiteDataBase.create(script=CREATE_SCRIPT)
     bot: Bot = MyBot(config.TOKEN).get_instance()
     scheduler = AsyncIOScheduler()
     scheduler.start()
