@@ -31,9 +31,9 @@ class SqLiteDataBase:
         return wrapper
 
     # создание БД
-    @staticmethod
+    @classmethod
     @connector
-    def create(con: sq.Connection, script):
+    def create(cls, con: sq.Connection, script):
         con.executescript(script)
 
     # получить из БД
@@ -53,9 +53,9 @@ class SqLiteDataBase:
         return result
 
     # положить в БД
-    @staticmethod
+    @classmethod
     @connector
-    def post_query(con: sq.Connection, query: str, params=None) -> Any | None:
+    def post_query(cls, con: sq.Connection, query: str, params=None) -> Any | None:
         if params is None:
             params = []
         con.row_factory = sq.Row
@@ -65,8 +65,8 @@ class SqLiteDataBase:
         con.commit()
         return data
 
-    @staticmethod
+    @classmethod
     @connector
-    def post_many(con: sq.Connection, query: str, data: list[tuple]):
+    def post_many(cls, con: sq.Connection, query: str, data: list[tuple]):
         for item in data:
             con.executemany(query.format(item[0]), item[1])

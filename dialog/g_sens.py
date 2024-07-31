@@ -48,10 +48,10 @@ g_sens_menu = Dialog(
         Const("Выбор номера датчика:"),
         Column(
             Select(
-                Format('{item[0]} {item[1]}'),
+                Format('{item}'),
                 id='sens_choice',
                 items='g_sens',
-                item_id_getter=lambda x: x[0],
+                item_id_getter=lambda x: x,
                 on_click=g_sensor.on_sens_selected
             )
         ),
@@ -84,10 +84,10 @@ g_sens_menu = Dialog(
         Const("Выбор номера датчика:"),
         Column(
             Select(
-                Format('{item[0]} {item[1]}'),
+                Format('{item}'),
                 id='sens_choice',
                 items='p_sens',
-                item_id_getter=lambda x: x[0],
+                item_id_getter=lambda x: x,
                 on_click=g_sensor.on_sens_selected
             )
         ),

@@ -1,11 +1,9 @@
-from config import GAS_SENS_IDS, GAS_SENS_DESCS, GAS_SENS_PROB_IDS, GAS_SENS_PROB_DESCS
+from config import GAS_SENS_DESCS, GAS_SENS_PROB_DESCS
 
 
 async def on_sens_selected(**kwargs):
-    p_sens = list(zip(GAS_SENS_IDS, GAS_SENS_DESCS))
-    return {'p_sens': p_sens}
+    return {"p_sens": GAS_SENS_DESCS}
 
 
 async def on_sens_prob_selected(**kwargs):
-    g_sens = list(zip(GAS_SENS_PROB_IDS, GAS_SENS_PROB_DESCS))
-    return {'g_sens': g_sens}
+    return {"g_sens": GAS_SENS_PROB_DESCS}

@@ -1,30 +1,6 @@
-from collections.abc import Callable
-
-class Foo:
-    name = 'sssss'
-
-    @staticmethod
-    def dec(func: Callable):
-        def wrapper(cls, *args, **kwargs)-> int:
-            a = 12
-            res = func(cls, a, *args, **kwargs)
-            return res
-
-        return wrapper
+from db.repo import GasSensorService
 
 
-    @classmethod
-    @dec
-    def foo(cls, first, second)-> int:
-        print(cls.name)
-        return first * second
+a = GasSensorService.get_last_values()
 
-    @staticmethod
-    @dec
-    def bar(first, second)-> int:
-        return first + second
-
-print('hello, {}'.format('Vasya'))
-
-print(Foo.foo(7))
-print(Foo.bar(14))
+print(a)

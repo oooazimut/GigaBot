@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 
 import config
@@ -20,6 +21,13 @@ async def save_data():
             [(key, value, dttm) for key, value in zip(keys, values)],
         )
 
+        for i in gas_sensors[1]:
+            if i[1] > 30 and not vars.gas_sensors.get(i[0]):
+                await send_message(f"Датчик газа {i[0]}: концентрация {i[1]}%!")
+                vars.gas_sensors[i[0]] = True
+                await asyncio.sleep(300)
+                vars.gas_sensors[i[0]] = False
+
         # Давление насосов
         pressures = (
             "pressures",
@@ -38,27 +46,25 @@ async def save_data():
 
         # Дренажные ёмкости
         tanks = dict(enumerate(convert_to_bin(data[28], 3), start=1))
-        triggered_tanks = list()
+        triggered_tanks = ("tank_levels", [])
         if data[28]:
             for tank in tanks:
                 if tanks[tank]:
-                    triggered_tanks.append((tank, tanks[tank], dttm))
+                    triggered_tanks[1].append((tank, tanks[tank], dttm))
                     if tanks.get(tank) != vars.levels.get(tank):
                         await send_message(text=f"Переполнение емкости {tank}!")
         vars.levels = tanks
-        tanks = ("tank_levels", tanks)
 
         #  Работа насосов в обход
         bypasses = dict(zip(config.PUMPS_IDS[:-1], convert_to_bin(data[29], 4)))
-        triggered_bypasses = list()
+        triggered_bypasses = ("bypasses", [])
         if data[29]:
             for pump in bypasses:
                 if bypasses[pump]:
-                    triggered_bypasses.append((pump, bypasses[pump], dttm))
+                    triggered_bypasses[1].append((pump, bypasses[pump], dttm))
                     if bypasses.get(pump) != vars.cheats.get(pump):
                         await send_message(text=f"Насос {pump} работает в обход УЗА!")
         vars.cheats = bypasses
-        bypasses = ("bypasses", bypasses)
 
         # Сработка сирен
         if data[30]:

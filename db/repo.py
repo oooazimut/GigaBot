@@ -44,43 +44,25 @@ class PressureService(Service):
 class GasSensorService(Service):
     @staticmethod
     def get_last_values():
-        query = (
-            'SELECT * from (SELECT * FROM gas_levels  WHERE name like "пробная%" ORDER BY dttm DESC LIMIT 5) '
-            "GROUP BY name"
-        )
+        query = "SELECT name, round(value, 1) as value, dttm from gas_levels WHERE dttm = (SELECT max(dttm) from gas_levels)"
         result = SqDB.select_query(query)
-
         current_date = datetime.datetime.now()
         delta: datetime.timedelta = current_date - result[0]["dttm"]
+
         if delta.seconds > 300:
             return
 
-        return result
+        return {i["name"]: i["value"] for i in result}
 
     @staticmethod
     def get_archive_values(date, g_sens=None):
         query = "select * from gas_levels where date(dttm) = ?"
         params = [date]
         if g_sens:
-            query += " AND name like ?"
-            params.append(g_sens)
+            placeholders = ', '.join(['?']*len(g_sens))
+            query += f" AND name in ({placeholders})"
+            params.extend(g_sens)
         result = SqDB.select_query(query, params)
-        return result
-
-    @staticmethod
-    def get_g_pumps_last_values():
-        query = (
-            'SELECT * from (SELECT * FROM gas_levels  WHERE name like "насосная%" ORDER BY dttm DESC LIMIT 5) '
-            "GROUP BY name"
-        )
-        result = SqDB.select_query(query)
-
-        # current_date = datetime.datetime.now()
-        # delta: datetime.timedelta = current_date - result[0]['dttm']
-        # if delta.seconds > 300:
-        #     print(delta.seconds)
-        #     return
-
         return result
 
     @staticmethod
