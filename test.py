@@ -1,15 +1,11 @@
-import sqlite3
+# import asyncio
+from service.modbus import ModbusService
 
 
-script = "update gas_levels set name = ? where name = ?"
-data = [
-    ("5.1", "насосная.1"),
-    ("5.2", "насосная.2"),
-    ("5.4", "насосная.3"),
-    ("5.3", "насосная.4"),
-    ("3.8", "пробная.1"),
-    ("4.1", "пробная.2"),
-]
+async def write_setpoint(register, value):
+    await ModbusService.client.connect()
+    print(ModbusService.client.connected)
+    await ModbusService.client.write_register(register, value)
+    ModbusService.client.close()
 
-with sqlite3.connect("Giga.db") as con:
-    con.executemany(script, data)
+# asyncio.run(write_setpoint(16429, 5425))
