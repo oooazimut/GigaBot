@@ -1,11 +1,11 @@
-from typing import Iterable
+from typing import Iterable, List, Tuple
 
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import matplotlib.dates as mdates
+import matplotlib.image as mpimg
 import matplotlib.patches as patches
-from PIL import Image, ImageDraw, ImageFont
+import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
+from PIL import Image, ImageDraw, ImageFont
 
 
 class PlotService:
@@ -204,6 +204,9 @@ class PlotService:
 
 
 class ImageService:
+    _font_cache = {}
+    _image_cache = {}
+
     @staticmethod
     def paste_row(
         bg: Image.Image,
@@ -242,8 +245,12 @@ class ImageService:
         fontsize=33,
     ):
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=fontsize, encoding="UTF-8")
+        font = ImageService._get_font("fonts/Ubuntu-R.ttf", font_size=fontsize)
         for item in some_text:
             draw.text(point, item, fill="black", font=font)
-            point[0] += step
-        img.save("media/uza/result.png")
+            point = (point[0] + step, point[1])
+
+        result_path = "media/uza/result.png"
+        img.save(result_path, optimize=True)
+
+        return result_path
