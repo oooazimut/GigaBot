@@ -226,6 +226,9 @@ class ImageService:
         size: int = 150,
         step: int = 200,
     ):
+
+        draw = ImageDraw.Draw(bg)
+        font = ImageService._get_font("fonts/Ubuntu-R.ttf", font_size=28)
         path = f"media/uza/{group}/"
 
         image_cache = ImageService._image_cache.setdefault(group, {})
