@@ -208,39 +208,56 @@ class ImageService:
     _image_cache = {}
 
     @staticmethod
-    def paste_row(
+    def _get_font(font_path: str, font_size: int) -> ImageFont.FreeTypeFont:
+        key = (font_path, font_size)
+        if key not in ImageService._font_cache:
+            ImageService._font_cache[key] = ImageFont.truetype(
+                font_path, size=font_size, encoding="UTF-8"
+            )
+        return ImageService._font_cache[key]
+
+    @staticmethod
+    async def paste_row(
         bg: Image.Image,
         values: Iterable,
         group: str,
-        ordinata: float,
-        abcissa: float = 30,
+        ordinata: int,
+        abcissa: int = 30,
         size: int = 150,
         step: int = 200,
     ):
-        path = f"media/uza/{group}/"
+
         draw = ImageDraw.Draw(bg)
-        font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=28, encoding="UTF-8")
+        font = ImageService._get_font("fonts/Ubuntu-R.ttf", font_size=28)
+        path = f"media/uza/{group}/"
+
+        image_cache = ImageService._image_cache.setdefault(group, {})
 
         for position, val in values:
-            element = (
-                Image.open(path + str(val) + ".png")
-                .resize((size, size))
-                .convert("RGBA")
-            )
-            bg.paste(element, (abcissa, ordinata), element)
+            if val not in image_cache:
+                element_path = f"{path}{str(val)}.png"
+                element = Image.open(element_path).resize((size, size)).convert("RGBA")
+                image_cache[val] = element
+            element = image_cache[val]
+
+            position_tuple = (abcissa + step * position, ordinata)
+            bg.paste(element, position_tuple, element)
             draw.text(
-                (abcissa + 40, ordinata - 40), str(position), fill="black", font=font
+                (position_tuple[0] + 40, position_tuple[1] - 40),
+                str(position),
+                fill="black",
+                font=font,
             )
-            abcissa += step
+
         result_path = "media/uza/result.png"
-        bg.save(result_path)
+        bg.save(result_path, optimize=True)
         return result_path
 
     @staticmethod
-    def print_text(
+    async def print_text(
         img: Image.Image,
-        some_text: list[str],
-        point: list[float],
+        some_text: List[str],
+        point: Tuple[float, float],
         step: int = 200,
         fontsize=33,
     ):
