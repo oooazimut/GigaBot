@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, List, Tuple
 
 import matplotlib.dates as mdates
 import matplotlib.image as mpimg
@@ -205,6 +205,7 @@ class PlotService:
 
 class ImageService:
     _font_cache = {}
+    _image_cache = {}
 
     @staticmethod
     def _get_font(font_path: str, font_size: int) -> ImageFont.FreeTypeFont:
@@ -216,12 +217,12 @@ class ImageService:
         return ImageService._font_cache[key]
 
     @staticmethod
-    def paste_row(
+    async def paste_row(
         bg: Image.Image,
         values: Iterable,
         group: str,
-        ordinata: float,
-        abcissa: float = 30,
+        ordinata: int,
+        abcissa: int = 30,
         size: int = 150,
         step: int = 200,
     ):
@@ -229,33 +230,43 @@ class ImageService:
         font = ImageService._get_font("fonts/Ubuntu-R.ttf", font_size=28)
         path = f"media/uza/{group}/"
 
-        image_cache = {}
+        image_cache = ImageService._image_cache.setdefault(group, {})
 
         for position, val in values:
             if val not in image_cache:
                 element_path = f"{path}{str(val)}.png"
                 element = Image.open(element_path).resize((size, size)).convert("RGBA")
                 image_cache[val] = element
-            bg.paste(element, (abcissa, ordinata), element)
+            element = image_cache[val]
+
+            position_tuple = (abcissa + step * position, ordinata)
+            bg.paste(element, position_tuple, element)
             draw.text(
-                (abcissa + 40, ordinata - 40), str(position), fill="black", font=font
+                (position_tuple[0] + 40, position_tuple[1] - 40),
+                str(position),
+                fill="black",
+                font=font,
             )
-            abcissa += step
+
         result_path = "media/uza/result.png"
-        bg.save(result_path)
+        bg.save(result_path, optimize=True)
         return result_path
 
     @staticmethod
-    def print_text(
+    async def print_text(
         img: Image.Image,
-        some_text: list[str],
-        point: list[float],
+        some_text: List[str],
+        point: Tuple[float, float],
         step: int = 200,
         fontsize=33,
     ):
         draw = ImageDraw.Draw(img)
-        font = ImageFont.truetype("fonts/Ubuntu-R.ttf", size=fontsize, encoding="UTF-8")
+        font = ImageService._get_font("fonts/Ubuntu-R.ttf", font_size=fontsize)
         for item in some_text:
             draw.text(point, item, fill="black", font=font)
-            point[0] += step
-        img.save("media/uza/result.png")
+            point = (point[0] + step, point[1])
+
+        result_path = "media/uza/result.png"
+        img.save(result_path, optimize=True)
+
+        return result_path

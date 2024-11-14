@@ -17,8 +17,16 @@ class Service:
 
 class PressureService(Service):
     @staticmethod
-    def get_last_values():
-        query = "SELECT * FROM (SELECT * FROM pressures ORDER BY id DESC LIMIT 5) ORDER BY name"
+    async def get_last_values():
+        query = """
+          SELECT * 
+            FROM (
+                SELECT * 
+                  FROM pressures 
+              ORDER BY id DESC LIMIT 5
+              ) 
+        ORDER BY name
+        """
         result = SqDB.select_query(query)
 
         current_date = datetime.datetime.now()
@@ -92,7 +100,7 @@ class GasSensorService(Service):
 
 class PumpWorkService(Service):
     @staticmethod
-    def get_current() -> list:
+    async def get_current() -> list:
         with open("pumpwork.txt", "r") as file:
             data = file.read().split()
         data.reverse()
