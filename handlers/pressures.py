@@ -12,7 +12,7 @@ from states import PressuresSG
 
 
 async def to_current(cq: CallbackQuery, button: Button, manager: DialogManager):
-    data = PressureService.get_last_values()
+    data = await PressureService.get_last_values()
     if data:
         pressures = [round(i['value'], 1) for i in data]
         pressures.reverse()
