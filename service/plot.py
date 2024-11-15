@@ -240,7 +240,7 @@ class ImageService:
                 image_cache[val] = element
             element = image_cache[val]
 
-            position_tuple = (abcissa + step * position, ordinata)
+            position_tuple = (abcissa + step, ordinata)
             bg.paste(element, position_tuple, element)
             draw.text(
                 (position_tuple[0] + 40, position_tuple[1] - 40),
