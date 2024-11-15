@@ -240,15 +240,15 @@ class ImageService:
                 image_cache[val] = element
             element = image_cache[val]
 
-            print('abcissa - ', type(abcissa), 'step - ', type(step), 'position - ', type(position))
-            position_tuple = (abcissa + step, ordinata)
-            bg.paste(element, position_tuple, element)
+            # position_tuple = (abcissa + step, ordinata)
+            bg.paste(element, (abcissa, ordinata), element)
             draw.text(
-                (position_tuple[0] + 40, position_tuple[1] - 40),
+                (abcissa + 40, ordinata - 40),
                 str(position),
                 fill="black",
                 font=font,
             )
+            abcissa += step
 
         result_path = "media/uza/result.png"
         bg.save(result_path, optimize=True)

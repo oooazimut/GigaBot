@@ -51,7 +51,7 @@ async def on_uza(cq: CallbackQuery, button: Button, manager: DialogManager):
     pumps = convert_to_bin(vars.pumps, zerofill=5)
     pumps = list(zip(PUMPS_IDS, pumps))
     pumps.reverse()
-    img_path = ImageService.paste_row(imaga, pumps, "pumps", 850)
+    img_path = await ImageService.paste_row(imaga, pumps, "pumps", 850)
 
     if pressures:
         pressures = [round(i["value"], 1) for i in pressures]
