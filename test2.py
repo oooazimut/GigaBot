@@ -1,6 +1,18 @@
-from db.repo import GasSensorService
+import asyncio
 
+async def task(name, delay):
+    await asyncio.sleep(delay)
+    print(f'Task {name} completed')
+    return f'{name} result'
 
-a = GasSensorService.get_last_values()
+async def main():
+    result = await asyncio.gather(
+        task("A", 2),
+        task("B", 3),
+        task("C", 1),
+    )
+    print(result)
 
-print(a)
+# Запуск
+asyncio.run(main())
+
