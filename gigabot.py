@@ -15,6 +15,8 @@ from dialog import menu, pressures, pumpwork, uza, g_sens, authority
 import jobs
 import middlewares
 from custom.media_storage import MediaIdStorage
+from clear_data import remove_old_data
+
 
 logging.getLogger("apscheduler").setLevel(logging.WARNING)
 
@@ -26,6 +28,8 @@ async def main():
     scheduler.add_job(jobs.save_data, "interval", seconds=5, id="savedata")
     scheduler.add_job(jobs.save_pumpwork, "cron", hour=9, id="savepumpwork")
     scheduler.add_job(jobs.morning_mailing, "cron", hour=9, id="morning_mailing")
+    scheduler.add_job(remove_old_data, "cron", day=1, id="clear_old_data")
+
     storage = RedisStorage(
         Redis(), key_builder=DefaultKeyBuilder(with_destiny=True, with_bot_id=True)
     )

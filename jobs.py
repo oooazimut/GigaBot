@@ -50,7 +50,7 @@ async def save_data():
         if data[28]:
             for tank in tanks:
                 if tanks[tank]:
-                    triggered_tanks[1].append((tank, tanks[tank], dttm))
+                    triggered_tanks[1].append((tank-6, tanks[tank], dttm))
                     if tanks.get(tank) != vars.levels.get(tank):
                         await send_message(text=f"Переполнение емкости {tank-6}!")
         vars.levels = tanks
